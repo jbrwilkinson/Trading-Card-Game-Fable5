@@ -24,6 +24,15 @@ describe("checkWinCondition", () => {
     expect(checkWinCondition(decked)).toBe("player1");
   });
 
+  it("declares the opponent winner when a player's corruption reaches the limit", () => {
+    const state = freshState();
+    const corrupted = {
+      ...state,
+      players: { ...state.players, player1: { ...state.players.player1, corruptionTrack: 10 } },
+    };
+    expect(checkWinCondition(corrupted)).toBe("player2");
+  });
+
   it("declares a draw if both players lose simultaneously", () => {
     const state = freshState();
     const both = {

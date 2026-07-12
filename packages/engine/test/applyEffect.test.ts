@@ -62,10 +62,13 @@ describe("applyEffect", () => {
     expect(next.players.player1.hand.some((c) => c.instanceId === activeId)).toBe(true);
   });
 
-  it("corruptionTick increments the controller's corruptionTrack", () => {
+  it("corruptionTick targets self or opponent as specified", () => {
     const state = stateWithBothActives();
-    const next = applyEffect(state, "player1", { type: "corruptionTick", amount: 1 });
-    expect(next.players.player1.corruptionTrack).toBe(1);
+    const selfTick = applyEffect(state, "player1", { type: "corruptionTick", amount: 1, player: "self" });
+    expect(selfTick.players.player1.corruptionTrack).toBe(1);
+    const oppTick = applyEffect(state, "player1", { type: "corruptionTick", amount: 2, player: "opponent" });
+    expect(oppTick.players.player2.corruptionTrack).toBe(2);
+    expect(oppTick.players.player1.corruptionTrack).toBe(0);
   });
 
   it("cleanupKnockouts discards a character whose damage meets or exceeds effective resilience", () => {

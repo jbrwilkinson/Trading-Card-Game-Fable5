@@ -11,6 +11,18 @@
     "effect": { "type": "damage", "amount": 2, "target": { "scope": "opponentActive" } }
   },
   {
+    "id": "whispers-of-the-ring",
+    "name": "Whispers of the Ring",
+    "faction": "mordor",
+    "kind": "event",
+    "rulesText": "Fast — The opponent's corruption rises by 2. At 10 corruption, they fall to the Shadow.",
+    "artId": "whispers-of-the-ring",
+    "flavorText": "It betrayed Isildur to his death. It wants to be found.",
+    "cost": { "total": 1 },
+    "speed": "fast",
+    "effect": { "type": "corruptionTick", "amount": 2, "player": "opponent" }
+  },
+  {
     "id": "whips-of-the-masters",
     "name": "Whips of the Masters",
     "faction": "mordor",

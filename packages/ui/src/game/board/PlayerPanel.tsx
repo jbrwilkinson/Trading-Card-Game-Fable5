@@ -65,6 +65,11 @@ export function PlayerPanel({
         <span title="Cards left in deck">🂠 {player.deck.length}</span>
         <span title="Discard pile">🗑 {player.discard.length}</span>
         <span title="Available resources this turn">◆ {player.resourcePool}</span>
+        {player.corruptionTrack > 0 && (
+          <span className="panel__corruption" title="Corruption — at 10 you fall to the Shadow and lose">
+            ☠ {player.corruptionTrack}/10
+          </span>
+        )}
         {!isViewer && <span title="Cards in hand">✋ {player.hand.length}</span>}
       </div>
 

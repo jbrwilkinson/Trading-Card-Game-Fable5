@@ -1,13 +1,19 @@
 import type { Action, CardDatabase, PlayerState } from "@lotr-tcg/engine";
 import { CardFace } from "../card/CardFace.js";
 
+export interface TargetingRequest {
+  actionType: "playItem" | "evolveCharacter";
+  instanceId: string;
+  legalTargetIds: string[];
+}
+
 interface HandProps {
   player: PlayerState;
   cardDb: CardDatabase;
   viewerActions: Action[];
   onAction: (action: Action) => void;
-  /** Called instead of dispatching when the clicked card needs a target chosen first (items). */
-  onBeginTargeting: (itemInstanceId: string, legalTargetIds: string[]) => void;
+  /** Called instead of dispatching when the clicked card needs a target chosen first (items, evolutions). */
+  onBeginTargeting: (request: TargetingRequest) => void;
 }
 
 export function Hand({ player, cardDb, viewerActions, onAction, onBeginTargeting }: HandProps) {
@@ -16,11 +22,12 @@ export function Hand({ player, cardDb, viewerActions, onAction, onBeginTargeting
       {player.hand.map((instance) => {
         const card = cardDb.getCard(instance.cardId);
 
-        // Items produce one legal action per possible target; collect them so a
-        // click starts target selection rather than auto-picking the first.
-        const itemActions = viewerActions.filter(
-          (a): a is Extract<Action, { type: "playItem" }> =>
-            a.type === "playItem" && a.instanceId === instance.instanceId
+        // Items and evolutions produce one legal action per possible target;
+        // collect them so a click starts target selection rather than
+        // auto-picking the first.
+        const targetedActions = viewerActions.filter(
+          (a): a is Extract<Action, { type: "playItem" | "evolveCharacter" }> =>
+            (a.type === "playItem" || a.type === "evolveCharacter") && a.instanceId === instance.instanceId
         );
         const directAction = viewerActions.find(
           (a) =>
@@ -32,14 +39,15 @@ export function Hand({ player, cardDb, viewerActions, onAction, onBeginTargeting
             a.instanceId === instance.instanceId
         );
 
-        const playable = itemActions.length > 0 || Boolean(directAction);
+        const playable = targetedActions.length > 0 || Boolean(directAction);
         const onClick = playable
           ? () => {
-              if (itemActions.length > 0) {
-                onBeginTargeting(
-                  instance.instanceId,
-                  itemActions.map((a) => a.targetInstanceId)
-                );
+              if (targetedActions.length > 0) {
+                onBeginTargeting({
+                  actionType: targetedActions[0]!.type,
+                  instanceId: instance.instanceId,
+                  legalTargetIds: targetedActions.map((a) => a.targetInstanceId),
+                });
               } else if (directAction) {
                 onAction(directAction);
               }

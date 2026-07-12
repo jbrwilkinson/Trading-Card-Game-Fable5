@@ -264,6 +264,10 @@ body {
 .panel__hope {
   color: #ffd97a;
 }
+.panel__corruption {
+  color: #c77dff;
+  font-weight: bold;
+}
 .panel__board {
   display: flex;
   gap: 0.75rem;

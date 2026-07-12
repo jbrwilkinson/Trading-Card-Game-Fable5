@@ -8,6 +8,7 @@ export type Action =
   | { type: "playEvent"; player: PlayerId; instanceId: string; targetInstanceId?: string }
   | { type: "playStory"; player: PlayerId; instanceId: string; targetInstanceId?: string }
   | { type: "moveToActive"; player: PlayerId; instanceId: string }
+  | { type: "evolveCharacter"; player: PlayerId; instanceId: string; targetInstanceId: string }
   | { type: "declareAttack"; player: PlayerId; attackerInstanceId: string }
   | { type: "passPriority"; player: PlayerId }
   | { type: "endPhase"; player: PlayerId };

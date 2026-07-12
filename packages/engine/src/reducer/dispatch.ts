@@ -1,6 +1,5 @@
 import type { Action, CardDatabase, GameState, PlayerId, Phase } from "../types/index.js";
 import {
-  applyDamage,
   attachItem,
   drawCard,
   moveToActive,
@@ -10,7 +9,7 @@ import {
   untapAll,
 } from "../zones/zones.js";
 import { applyEffect, cleanupKnockouts } from "../rules/applyEffect.js";
-import { getEffectiveResilience, getEffectivePower } from "../rules/stats.js";
+import { getEffectiveResilience } from "../rules/stats.js";
 import { legalActions } from "../rules/legalActions.js";
 import { checkWinCondition } from "../win-condition/checkWinCondition.js";
 import { pushToStack, resolveStack } from "../stack/stack.js";
@@ -135,27 +134,49 @@ function applyAction(state: GameState, action: Action, cardDb: CardDatabase): Ga
       return moveToActive(state, action.player, action.instanceId);
     case "declareAttack": {
       const attacker = state.players[action.player].active;
-      const defenderId = opponentOf(action.player);
-      const defender = state.players[defenderId].active;
       if (!attacker) return state;
-      const damage = getEffectivePower(cardDb, attacker);
-      // With a defending active character the damage marks it AND reduces Hope;
-      // with no defender the attack is direct and only Hope is reduced.
-      let next = defender ? applyDamage(state, defenderId, defender.instanceId, damage) : state;
-      next = {
-        ...next,
+      // The attack goes on the stack rather than resolving immediately: the
+      // defender gets a response window (events) before damage is dealt.
+      return pushToStack(state, action.player, attacker.instanceId, {
+        type: "resolveAttack",
+        attackerInstanceId: attacker.instanceId,
+      });
+    }
+    case "evolveCharacter": {
+      const evolutionCard = state.players[action.player].hand.find((c) => c.instanceId === action.instanceId);
+      if (!evolutionCard) return state;
+      const def = cardDb.getCard(evolutionCard.cardId);
+      if (def.kind !== "character" || !def.evolvesFrom) return state;
+      const player = state.players[action.player];
+      const evolve = (c: typeof player.active) =>
+        c && c.instanceId === action.targetInstanceId
+          ? {
+              ...c,
+              cardId: def.id,
+              evolvedFromInstanceIds: [...c.evolvedFromInstanceIds, c.cardId],
+            }
+          : c;
+      let next: GameState = {
+        ...state,
         players: {
-          ...next.players,
-          [defenderId]: { ...next.players[defenderId], hopeTotal: Math.max(0, next.players[defenderId].hopeTotal - damage) },
+          ...state.players,
           [action.player]: {
-            ...next.players[action.player],
-            active: next.players[action.player].active
-              ? { ...next.players[action.player].active!, tapped: true }
-              : null,
+            ...player,
+            hand: player.hand.filter((c) => c.instanceId !== action.instanceId),
+            discard: [...player.discard, evolutionCard],
+            resourcePool: player.resourcePool - def.cost.total,
+            active: evolve(player.active),
+            bench: player.bench.map((c) => evolve(c) ?? c),
           },
         },
       };
-      return log(next, action.player, `${attacker.cardId} attacks for ${damage}.`, "attack");
+      next = log(next, action.player, `Evolved into ${def.id}.`, "play");
+      for (const ability of def.abilities) {
+        if (ability.trigger === "onPlay") {
+          next = applyEffect(next, action.player, ability.effect);
+        }
+      }
+      return next;
     }
     case "passPriority":
       return resolveStack(state, cardDb);

@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Action, PlayerId } from "@lotr-tcg/engine";
-import { chooseAction } from "@lotr-tcg/ai";
+import { chooseAction, chooseResponse } from "@lotr-tcg/ai";
 import { useGameEngine, type GameSetup } from "../engine-adapter/useGameEngine.js";
 import { useSoundEffects } from "../audio/useSoundEffects.js";
 import { PlayerPanel } from "./board/PlayerPanel.js";
-import { Hand } from "./hand/Hand.js";
+import { Hand, type TargetingRequest } from "./hand/Hand.js";
 import { PassScreen } from "./hotseat/PassScreen.js";
 
 const AI_SEAT: PlayerId = "player2";
@@ -19,7 +19,8 @@ const PHASE_LABELS: Record<string, string> = {
 };
 
 interface TargetingState {
-  itemInstanceId: string;
+  actionType: "playItem" | "evolveCharacter";
+  instanceId: string;
   legalTargetIds: Set<string>;
 }
 
@@ -39,9 +40,13 @@ export function GameScreen({ setup, onExit }: GameScreenProps) {
   // turn play out; in hotseat the viewpoint follows the active player.
   const viewer: PlayerId = isVsAI ? "player1" : state.activePlayer;
   const isAiTurn = isVsAI && state.activePlayer === AI_SEAT;
+  // During the AI's turn the human normally has no actions — EXCEPT when the
+  // AI has an attack waiting on the stack: that's the human's response window
+  // (flash in an event, or resolve the attack).
+  const humanResponseWindow = isAiTurn && state.stack.length > 0;
   const viewerActions = useMemo(
-    () => (isAiTurn ? [] : actionsFor(viewer)),
-    [actionsFor, viewer, isAiTurn]
+    () => (isAiTurn && !humanResponseWindow ? [] : actionsFor(viewer)),
+    [actionsFor, viewer, isAiTurn, humanResponseWindow]
   );
   const opponent: PlayerId = viewer === "player1" ? "player2" : "player1";
   const { muted, toggleMute } = useSoundEffects(state, isVsAI ? "player1" : null);
@@ -70,9 +75,12 @@ export function GameScreen({ setup, onExit }: GameScreenProps) {
   // vsAI: on the AI's turn, pick and dispatch one action per state change,
   // with a short delay so the human can follow along. The state-identity ref
   // guard keeps StrictMode's double-invoked effects from double-dispatching.
+  // The AI pauses while its own attack sits on the stack — that pending entry
+  // is the HUMAN's response window; play resumes once the human resolves it.
   const lastAiActedOn = useRef<unknown>(null);
   useEffect(() => {
     if (!isAiTurn || state.winner || state.phase === "start" || state.phase === "end") return;
+    if (state.stack.length > 0) return; // human response window — see above
     if (lastAiActedOn.current === state) return;
     const timer = setTimeout(() => {
       if (lastAiActedOn.current === state) return;
@@ -83,6 +91,24 @@ export function GameScreen({ setup, onExit }: GameScreenProps) {
     return () => clearTimeout(timer);
   }, [state, isAiTurn, cardDb, dispatch, setup.difficulty]);
 
+  // vsAI: mirror image — when the HUMAN's attack (or event) is on the stack,
+  // give the AI one chance to flash in a response event before the human
+  // resolves. Null response means the AI holds, and the human's Resolve
+  // button proceeds as normal.
+  const lastAiRespondedTo = useRef<unknown>(null);
+  useEffect(() => {
+    if (!isVsAI || isAiTurn || state.winner || state.stack.length === 0) return;
+    if (state.stack.some((entry) => entry.controller === AI_SEAT)) return; // already responded to this wave
+    if (lastAiRespondedTo.current === state) return;
+    const timer = setTimeout(() => {
+      if (lastAiRespondedTo.current === state) return;
+      lastAiRespondedTo.current = state;
+      const response = chooseResponse(state, AI_SEAT, cardDb, setup.difficulty);
+      if (response) dispatch(response);
+    }, AI_MOVE_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [state, isVsAI, isAiTurn, cardDb, dispatch, setup.difficulty]);
+
   const onAction = (action: Action) => {
     setTargeting(null);
     dispatch(action);
@@ -90,8 +116,16 @@ export function GameScreen({ setup, onExit }: GameScreenProps) {
 
   const onPickTarget = (targetInstanceId: string) => {
     if (!targeting) return;
-    dispatch({ type: "playItem", player: viewer, instanceId: targeting.itemInstanceId, targetInstanceId });
+    dispatch({ type: targeting.actionType, player: viewer, instanceId: targeting.instanceId, targetInstanceId });
     setTargeting(null);
+  };
+
+  const onBeginTargeting = (request: TargetingRequest) => {
+    setTargeting({
+      actionType: request.actionType,
+      instanceId: request.instanceId,
+      legalTargetIds: new Set(request.legalTargetIds),
+    });
   };
 
   const endPhaseAction = viewerActions.find((a) => a.type === "endPhase");
@@ -115,10 +149,18 @@ export function GameScreen({ setup, onExit }: GameScreenProps) {
         <span className="game__turn">
           Turn {state.turn} · {turnLabel}
         </span>
-        <span className="game__phase">{isAiTurn ? "The computer is taking its turn" : (PHASE_LABELS[state.phase] ?? state.phase)}</span>
+        <span className="game__phase">
+          {humanResponseWindow
+            ? "The enemy attacks! Respond with an event, or resolve the attack."
+            : isAiTurn
+              ? "The computer is taking its turn"
+              : (PHASE_LABELS[state.phase] ?? state.phase)}
+        </span>
         {targeting ? (
           <span className="game__targeting">
-            Choose a character for the item{" "}
+            {targeting.actionType === "playItem"
+              ? "Choose a character for the item"
+              : "Choose the character to evolve"}{" "}
             <button className="btn btn--small" onClick={() => setTargeting(null)}>
               Cancel
             </button>
@@ -157,7 +199,7 @@ export function GameScreen({ setup, onExit }: GameScreenProps) {
         <div className="stack-tray">
           {state.stack.map((entry, i) => (
             <span key={i} className="stack-tray__entry">
-              {i + 1}. {entry.effect.type} ({entry.controller})
+              {i + 1}. {entry.effect.type === "resolveAttack" ? "⚔ attack" : entry.effect.type} ({entry.controller})
             </span>
           ))}
           <span className="stack-tray__hint">resolves top-down (last in, first out)</span>
@@ -179,9 +221,7 @@ export function GameScreen({ setup, onExit }: GameScreenProps) {
         cardDb={cardDb}
         viewerActions={targeting ? [] : viewerActions}
         onAction={onAction}
-        onBeginTargeting={(itemInstanceId, legalTargetIds) =>
-          setTargeting({ itemInstanceId, legalTargetIds: new Set(legalTargetIds) })
-        }
+        onBeginTargeting={onBeginTargeting}
       />
 
       <details className="game-log">

@@ -104,12 +104,13 @@ export function applyEffect(
       };
     }
     case "corruptionTick": {
-      const player = state.players[controller];
+      const targetId = effect.player === "self" ? controller : other(controller);
+      const player = state.players[targetId];
       return {
         ...state,
         players: {
           ...state.players,
-          [controller]: { ...player, corruptionTrack: player.corruptionTrack + effect.amount },
+          [targetId]: { ...player, corruptionTrack: player.corruptionTrack + effect.amount },
         },
       };
     }

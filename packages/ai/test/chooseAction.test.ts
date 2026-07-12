@@ -8,6 +8,7 @@ import {
 } from "@lotr-tcg/engine";
 import { createCardDatabase, FELLOWSHIP_DECK, MORDOR_DECK } from "@lotr-tcg/card-data";
 import { chooseAction } from "../src/select-action.js";
+import { chooseResponse } from "../src/choose-response.js";
 import { DIFFICULTY_PRESETS } from "../src/difficulty.js";
 
 const cardDb = createCardDatabase();
@@ -96,6 +97,59 @@ describe("chooseAction behavior", () => {
     expect(action).not.toBeNull();
     const next = dispatch(state, action!, cardDb);
     expect(next.winner).not.toBe("player1");
+  });
+
+  it("takes the lethal attack when one is available (resolving through the stack)", () => {
+    // Redundant name guard: the original lethal test below covers declaration;
+    // this asserts the declared attack actually wins after stack resolution.
+    const base = createInitialState(FELLOWSHIP_DECK.cardIds, MORDOR_DECK.cardIds, "lethal-resolve");
+    const attacker = makeCharacterInstance("aragorn-strider", "player1", "active");
+    let state: GameState = {
+      ...base,
+      phase: "combat",
+      activePlayer: "player1",
+      players: {
+        ...base.players,
+        player1: { ...base.players.player1, active: attacker },
+        player2: { ...base.players.player2, hopeTotal: 3, active: null },
+      },
+    };
+    const declare = chooseAction(state, "player1", cardDb, "hard")!;
+    expect(declare.type).toBe("declareAttack");
+    state = dispatch(state, declare, cardDb);
+    const resolve = chooseAction(state, "player1", cardDb, "hard")!;
+    state = dispatch(state, resolve, cardDb);
+    expect(state.winner).toBe("player1");
+  });
+
+  it("chooseResponse plays a killing event against a pending attack, and passes when it has nothing useful", () => {
+    const base = createInitialState(FELLOWSHIP_DECK.cardIds, MORDOR_DECK.cardIds, "response-test");
+    // Player1's wounded Goblin... actually: mordor cards belong to player2's deck,
+    // but instances are just cardIds — construct directly.
+    const attacker = { ...makeCharacterInstance("goblin-scout", "player1", "atk"), damageMarked: 1 }; // resilience 2, 1 dmg marked
+    const defender = makeCharacterInstance("aragorn-strider", "player2", "def");
+    const eventInHand = makeCharacterInstance("fell-screech", "player2", "evt"); // deal 2 damage, cost 2
+    let state: GameState = {
+      ...base,
+      phase: "combat",
+      activePlayer: "player1",
+      players: {
+        ...base.players,
+        player1: { ...base.players.player1, active: attacker, hand: [] },
+        player2: { ...base.players.player2, active: defender, hand: [eventInHand], resourcePool: 2 },
+      },
+    };
+    state = dispatch(state, { type: "declareAttack", player: "player1", attackerInstanceId: attacker.instanceId }, cardDb);
+
+    const response = chooseResponse(state, "player2", cardDb, "hard");
+    expect(response?.type).toBe("playEvent"); // killing the attacker fizzles the attack — clearly better than baseline
+
+    // With no events in hand there is nothing to flash in.
+    const emptyHanded = {
+      ...state,
+      players: { ...state.players, player2: { ...state.players.player2, hand: [] } },
+    };
+    expect(chooseResponse(emptyHanded, "player2", cardDb, "hard")).toBeNull();
   });
 
   it("difficulty presets are genuinely distinct", () => {

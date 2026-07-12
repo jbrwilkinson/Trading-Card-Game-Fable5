@@ -1,5 +1,5 @@
 import type { PlayerId } from "./common.js";
-import type { Effect } from "./effect.js";
+import type { StackableEffect } from "./effect.js";
 
 export type Phase = "start" | "resource" | "main" | "combat" | "end";
 
@@ -37,7 +37,7 @@ export interface PlayerState {
 export interface StackEntry {
   sourceInstanceId: string;
   controller: PlayerId;
-  effect: Effect;
+  effect: StackableEffect;
 }
 
 export interface GameLogEntry {

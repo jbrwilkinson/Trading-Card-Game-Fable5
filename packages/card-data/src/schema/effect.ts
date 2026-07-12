@@ -23,7 +23,11 @@ export const effectSchema = z.discriminatedUnion("type", [
     target: targetSpecSchema,
   }),
   z.object({ type: z.literal("returnToHand"), target: targetSpecSchema }),
-  z.object({ type: z.literal("corruptionTick"), amount: z.number().int().positive() }),
+  z.object({
+    type: z.literal("corruptionTick"),
+    amount: z.number().int().positive(),
+    player: z.enum(["self", "opponent"]),
+  }),
 ]);
 
 export const abilitySchema = z.object({

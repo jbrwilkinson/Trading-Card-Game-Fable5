@@ -189,6 +189,57 @@
     "tags": ["elf", "lord"]
   },
   {
+    "id": "frodo-ring-bearer",
+    "name": "Frodo, Ring-bearer",
+    "faction": "fellowship",
+    "kind": "character",
+    "rulesText": "Evolves from Frodo Baggins. When played: your corruption rises by 1.",
+    "artId": "frodo-ring-bearer",
+    "flavorText": "The Ring is mine.",
+    "cost": { "total": 2 },
+    "power": 3,
+    "resilience": 4,
+    "abilities": [
+      { "trigger": "onPlay", "effect": { "type": "corruptionTick", "amount": 1, "player": "self" } }
+    ],
+    "evolvesFrom": "frodo-baggins",
+    "tags": ["hobbit", "ring-bearer"]
+  },
+  {
+    "id": "gandalf-the-white",
+    "name": "Gandalf the White",
+    "faction": "fellowship",
+    "kind": "character",
+    "rulesText": "Evolves from Gandalf the Grey. When played: heal 2 damage from your active character.",
+    "artId": "gandalf-the-white",
+    "flavorText": "\"I come back to you now, at the turn of the tide.\"",
+    "cost": { "total": 3 },
+    "power": 6,
+    "resilience": 7,
+    "abilities": [
+      { "trigger": "onPlay", "effect": { "type": "heal", "amount": 2, "target": { "scope": "ownActive" } } }
+    ],
+    "evolvesFrom": "gandalf-the-grey",
+    "tags": ["wizard"]
+  },
+  {
+    "id": "aragorn-king-elessar",
+    "name": "Aragorn, King Elessar",
+    "faction": "fellowship",
+    "kind": "character",
+    "rulesText": "Evolves from Aragorn, Strider. When played: draw 1 card.",
+    "artId": "aragorn-king-elessar",
+    "flavorText": "The crownless again shall be king.",
+    "cost": { "total": 3 },
+    "power": 6,
+    "resilience": 5,
+    "abilities": [
+      { "trigger": "onPlay", "effect": { "type": "drawCards", "count": 1, "player": "self" } }
+    ],
+    "evolvesFrom": "aragorn-strider",
+    "tags": ["human", "king"]
+  },
+  {
     "id": "galadriel",
     "name": "Galadriel, Lady of Light",
     "faction": "fellowship",

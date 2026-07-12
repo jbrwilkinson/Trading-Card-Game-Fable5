@@ -45,5 +45,7 @@ export function scoreState(state: GameState, forPlayer: PlayerId, cardDb: CardDa
   score += w.cardAdvantage * (self.hand.length - enemy.hand.length);
   score += w.locationEconomy * (self.locationsInPlay.length - enemy.locationsInPlay.length);
   score += w.resourcesAvailable * self.resourcePool;
+  // Corruption climbs toward a loss at the limit, so the enemy's track is an asset and ours a liability.
+  score += w.corruptionPressure * (enemy.corruptionTrack - self.corruptionTrack);
   return score;
 }

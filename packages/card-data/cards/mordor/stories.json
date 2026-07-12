@@ -12,6 +12,18 @@
     "effect": { "type": "drawCards", "count": 2, "player": "self" }
   },
   {
+    "id": "weight-of-the-ring",
+    "name": "The Weight of the Ring",
+    "faction": "mordor",
+    "kind": "story",
+    "rulesText": "Slow — The opponent's corruption rises by 3. At 10 corruption, they fall to the Shadow.",
+    "artId": "weight-of-the-ring",
+    "flavorText": "Such a little thing, to bend so great a will.",
+    "cost": { "total": 2 },
+    "speed": "slow",
+    "effect": { "type": "corruptionTick", "amount": 3, "player": "opponent" }
+  },
+  {
     "id": "march-on-the-west",
     "name": "March on the West",
     "faction": "mordor",

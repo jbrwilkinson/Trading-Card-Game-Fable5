@@ -6,6 +6,7 @@ export interface EvalWeights {
   cardAdvantage: number;
   locationEconomy: number;
   resourcesAvailable: number;
+  corruptionPressure: number;
 }
 
 export interface DifficultyPreset {
@@ -35,6 +36,7 @@ export const DIFFICULTY_PRESETS: Record<Difficulty, DifficultyPreset> = {
       cardAdvantage: 0.5,
       locationEconomy: 1,
       resourcesAvailable: 0.25,
+      corruptionPressure: 2,
     },
     pickFromTop: 4,
   },
@@ -48,6 +50,7 @@ export const DIFFICULTY_PRESETS: Record<Difficulty, DifficultyPreset> = {
       cardAdvantage: 1.5,
       locationEconomy: 2,
       resourcesAvailable: 0.5,
+      corruptionPressure: 3,
     },
     pickFromTop: 2,
   },
@@ -61,6 +64,7 @@ export const DIFFICULTY_PRESETS: Record<Difficulty, DifficultyPreset> = {
       cardAdvantage: 2.5,
       locationEconomy: 3,
       resourcesAvailable: 0.5,
+      corruptionPressure: 4,
     },
     pickFromTop: 1,
   },

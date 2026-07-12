@@ -55,7 +55,8 @@ export function legalActions(state: GameState, playerId: PlayerId, cardDb: CardD
       if (player.bench.length < 5) {
         for (const card of player.hand) {
           const def = cardDb.getCard(card.cardId);
-          if (def.kind === "character" && def.cost.total <= player.resourcePool) {
+          // Evolution forms can't be played directly — only via evolveCharacter.
+          if (def.kind === "character" && !def.evolvesFrom && def.cost.total <= player.resourcePool) {
             actions.push({ type: "playCharacterToBench", player: playerId, instanceId: card.instanceId });
           }
         }
@@ -81,14 +82,29 @@ export function legalActions(state: GameState, playerId: PlayerId, cardDb: CardD
             });
           }
         }
+        // Evolution: a character card that evolves from a character you control.
+        if (def.kind === "character" && def.evolvesFrom && def.cost.total <= player.resourcePool) {
+          const targets = [player.active, ...player.bench].filter(
+            (c): c is NonNullable<typeof c> => c !== null && c.cardId === def.evolvesFrom
+          );
+          for (const target of targets) {
+            actions.push({
+              type: "evolveCharacter",
+              player: playerId,
+              instanceId: card.instanceId,
+              targetInstanceId: target.instanceId,
+            });
+          }
+        }
       }
       actions.push({ type: "endPhase", player: playerId });
       break;
     }
     case "combat": {
-      // Attacking is legal whenever the active character is untapped; with no
-      // defending active character the attack hits the opponent's Hope directly.
-      if (player.active && !player.active.tapped) {
+      // Attacking is legal whenever the active character is untapped and no
+      // attack is already waiting on the stack (it taps only on resolution).
+      // With no defending active character the attack hits Hope directly.
+      if (player.active && !player.active.tapped && state.stack.length === 0) {
         actions.push({ type: "declareAttack", player: playerId, attackerInstanceId: player.active.instanceId });
       }
       actions.push({ type: "endPhase", player: playerId });

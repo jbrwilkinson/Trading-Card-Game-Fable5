@@ -18,7 +18,17 @@ export type Effect =
       target: TargetSpec;
     }
   | { type: "returnToHand"; target: TargetSpec }
-  | { type: "corruptionTick"; amount: number };
+  | { type: "corruptionTick"; amount: number; player: "self" | "opponent" };
+
+/**
+ * Internal-only effect used for stack entries the engine creates itself
+ * (never authorable in card JSON — the card-data schema deliberately
+ * excludes it). Attacks resolve through the stack so the defender gets a
+ * response window.
+ */
+export type InternalEffect = { type: "resolveAttack"; attackerInstanceId: string };
+
+export type StackableEffect = Effect | InternalEffect;
 
 export type AbilityTrigger = "onPlay" | "onAttack" | "onTurnStart" | "activated";
 
