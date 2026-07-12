@@ -74,6 +74,20 @@ describe("dispatch", () => {
     expect(state.players.player1.active?.tapped).toBe(true);
   });
 
+  it("declareAttack with no defending active hits the opponent's Hope directly", () => {
+    let state: GameState = { ...freshState(), phase: "combat" };
+    state = withHand(state, "player1", ["aragorn-strider"]);
+    const aragorn = state.players.player1.hand.find((c) => c.cardId === "aragorn-strider")!;
+    state = moveToActive(playToBench(state, "player1", aragorn.instanceId), "player1", aragorn.instanceId);
+    expect(state.players.player2.active).toBeNull();
+
+    const hopeBefore = state.players.player2.hopeTotal;
+    state = dispatch(state, { type: "declareAttack", player: "player1", attackerInstanceId: aragorn.instanceId }, cardDb);
+
+    expect(state.players.player2.hopeTotal).toBe(hopeBefore - 4); // aragorn power 4, straight to Hope
+    expect(state.players.player1.active?.tapped).toBe(true);
+  });
+
   it("sets state.winner and stops accepting further actions once Hope reaches 0", () => {
     let state: GameState = { ...freshState(), phase: "combat" };
     state = withHand(state, "player1", ["aragorn-strider"]);

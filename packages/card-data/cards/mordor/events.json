@@ -1,0 +1,30 @@
+[
+  {
+    "id": "fell-screech",
+    "name": "Fell Screech",
+    "faction": "mordor",
+    "kind": "event",
+    "rulesText": "Fast — Deal 2 damage to the opponent's active character.",
+    "artId": "fell-screech",
+    "cost": { "total": 2 },
+    "speed": "fast",
+    "effect": { "type": "damage", "amount": 2, "target": { "scope": "opponentActive" } }
+  },
+  {
+    "id": "whips-of-the-masters",
+    "name": "Whips of the Masters",
+    "faction": "mordor",
+    "kind": "event",
+    "rulesText": "Fast — Your active character gets +2 power until end of turn.",
+    "artId": "whips-of-the-masters",
+    "cost": { "total": 1 },
+    "speed": "fast",
+    "effect": {
+      "type": "buffStat",
+      "stat": "power",
+      "amount": 2,
+      "duration": "turn",
+      "target": { "scope": "ownActive" }
+    }
+  }
+]

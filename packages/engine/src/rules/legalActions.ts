@@ -86,7 +86,9 @@ export function legalActions(state: GameState, playerId: PlayerId, cardDb: CardD
       break;
     }
     case "combat": {
-      if (player.active && !player.active.tapped && state.players[opponentOf(playerId)].active) {
+      // Attacking is legal whenever the active character is untapped; with no
+      // defending active character the attack hits the opponent's Hope directly.
+      if (player.active && !player.active.tapped) {
         actions.push({ type: "declareAttack", player: playerId, attackerInstanceId: player.active.instanceId });
       }
       actions.push({ type: "endPhase", player: playerId });

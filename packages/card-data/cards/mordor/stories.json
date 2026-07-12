@@ -1,0 +1,31 @@
+[
+  {
+    "id": "the-eye-of-sauron",
+    "name": "The Eye of Sauron",
+    "faction": "mordor",
+    "kind": "story",
+    "rulesText": "Slow — Draw 2 cards.",
+    "artId": "the-eye-of-sauron",
+    "flavorText": "There is no life in the void. Only death.",
+    "cost": { "total": 2 },
+    "speed": "slow",
+    "effect": { "type": "drawCards", "count": 2, "player": "self" }
+  },
+  {
+    "id": "march-on-the-west",
+    "name": "March on the West",
+    "faction": "mordor",
+    "kind": "story",
+    "rulesText": "Slow — Your active character gets +2 power permanently.",
+    "artId": "march-on-the-west",
+    "cost": { "total": 2 },
+    "speed": "slow",
+    "effect": {
+      "type": "buffStat",
+      "stat": "power",
+      "amount": 2,
+      "duration": "permanent",
+      "target": { "scope": "ownActive" }
+    }
+  }
+]

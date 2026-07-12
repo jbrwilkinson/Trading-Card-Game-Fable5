@@ -1,0 +1,32 @@
+[
+  {
+    "id": "the-shire",
+    "name": "The Shire",
+    "faction": "fellowship",
+    "kind": "location",
+    "rulesText": "Tap for 1 resource.",
+    "artId": "the-shire",
+    "flavorText": "A green and pleasant land, far from the troubles of the world.",
+    "resourceValue": 1
+  },
+  {
+    "id": "rivendell",
+    "name": "Rivendell",
+    "faction": "fellowship",
+    "kind": "location",
+    "rulesText": "Tap for 2 resources.",
+    "artId": "rivendell",
+    "flavorText": "The Last Homely House east of the Sea.",
+    "resourceValue": 2
+  },
+  {
+    "id": "lothlorien",
+    "name": "Lothlórien",
+    "faction": "fellowship",
+    "kind": "location",
+    "rulesText": "Tap for 2 resources.",
+    "artId": "lothlorien",
+    "flavorText": "The heart of Elvendom on earth.",
+    "resourceValue": 2
+  }
+]

@@ -1,0 +1,24 @@
+[
+  {
+    "id": "a-elbereth-gilthoniel",
+    "name": "A Elbereth Gilthoniel",
+    "faction": "fellowship",
+    "kind": "event",
+    "rulesText": "Fast — Deal 1 damage to the opponent's active character.",
+    "artId": "a-elbereth-gilthoniel",
+    "cost": { "total": 1 },
+    "speed": "fast",
+    "effect": { "type": "damage", "amount": 1, "target": { "scope": "opponentActive" } }
+  },
+  {
+    "id": "ent-draught",
+    "name": "Ent-draught",
+    "faction": "fellowship",
+    "kind": "event",
+    "rulesText": "Fast — Heal 2 damage from your active character.",
+    "artId": "ent-draught",
+    "cost": { "total": 1 },
+    "speed": "fast",
+    "effect": { "type": "heal", "amount": 2, "target": { "scope": "ownActive" } }
+  }
+]

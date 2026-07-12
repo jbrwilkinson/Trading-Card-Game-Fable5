@@ -120,9 +120,11 @@ function applyAction(state: GameState, action: Action, cardDb: CardDatabase): Ga
       const attacker = state.players[action.player].active;
       const defenderId = opponentOf(action.player);
       const defender = state.players[defenderId].active;
-      if (!attacker || !defender) return state;
+      if (!attacker) return state;
       const damage = getEffectivePower(cardDb, attacker);
-      let next = applyDamage(state, defenderId, defender.instanceId, damage);
+      // With a defending active character the damage marks it AND reduces Hope;
+      // with no defender the attack is direct and only Hope is reduced.
+      let next = defender ? applyDamage(state, defenderId, defender.instanceId, damage) : state;
       next = {
         ...next,
         players: {

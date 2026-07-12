@@ -1,0 +1,25 @@
+[
+  {
+    "id": "morgul-blade",
+    "name": "Morgul-blade",
+    "faction": "mordor",
+    "kind": "item",
+    "rulesText": "Attached character gets +2 power.",
+    "artId": "morgul-blade",
+    "flavorText": "A wound from this blade never truly heals.",
+    "cost": { "total": 2 },
+    "attachTarget": "character",
+    "statModifiers": { "power": 2 }
+  },
+  {
+    "id": "orcish-armour",
+    "name": "Orcish Armour",
+    "faction": "mordor",
+    "kind": "item",
+    "rulesText": "Attached character gets +2 resilience.",
+    "artId": "orcish-armour",
+    "cost": { "total": 1 },
+    "attachTarget": "character",
+    "statModifiers": { "resilience": 2 }
+  }
+]

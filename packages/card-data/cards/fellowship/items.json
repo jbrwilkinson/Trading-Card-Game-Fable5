@@ -1,0 +1,38 @@
+[
+  {
+    "id": "sting",
+    "name": "Sting",
+    "faction": "fellowship",
+    "kind": "item",
+    "rulesText": "Attached character gets +1 power.",
+    "artId": "sting",
+    "flavorText": "It glows blue when orcs are near.",
+    "cost": { "total": 1 },
+    "attachTarget": "character",
+    "statModifiers": { "power": 1 }
+  },
+  {
+    "id": "mithril-shirt",
+    "name": "Mithril Shirt",
+    "faction": "fellowship",
+    "kind": "item",
+    "rulesText": "Attached character gets +2 resilience.",
+    "artId": "mithril-shirt",
+    "flavorText": "Light as a feather, and as hard as dragon scales.",
+    "cost": { "total": 1 },
+    "attachTarget": "character",
+    "statModifiers": { "resilience": 2 }
+  },
+  {
+    "id": "anduril",
+    "name": "Andúril, Flame of the West",
+    "faction": "fellowship",
+    "kind": "item",
+    "rulesText": "Attached character gets +2 power.",
+    "artId": "anduril",
+    "flavorText": "The Sword that was Broken, reforged.",
+    "cost": { "total": 2 },
+    "attachTarget": "character",
+    "statModifiers": { "power": 2 }
+  }
+]

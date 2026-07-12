@@ -1,0 +1,32 @@
+[
+  {
+    "id": "mordor",
+    "name": "Mordor",
+    "faction": "mordor",
+    "kind": "location",
+    "rulesText": "Tap for 1 resource.",
+    "artId": "mordor",
+    "flavorText": "One does not simply walk into Mordor.",
+    "resourceValue": 1
+  },
+  {
+    "id": "barad-dur",
+    "name": "Barad-dûr",
+    "faction": "mordor",
+    "kind": "location",
+    "rulesText": "Tap for 2 resources.",
+    "artId": "barad-dur",
+    "flavorText": "The Dark Tower, where the Great Eye keeps its ceaseless watch.",
+    "resourceValue": 2
+  },
+  {
+    "id": "mines-of-moria",
+    "name": "The Mines of Moria",
+    "faction": "mordor",
+    "kind": "location",
+    "rulesText": "Tap for 2 resources.",
+    "artId": "mines-of-moria",
+    "flavorText": "Drums, drums in the deep.",
+    "resourceValue": 2
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "council-of-elrond",
+    "name": "The Council of Elrond",
+    "faction": "fellowship",
+    "kind": "story",
+    "rulesText": "Slow — Draw 2 cards.",
+    "artId": "council-of-elrond",
+    "flavorText": "\"You shall be the Fellowship of the Ring.\"",
+    "cost": { "total": 2 },
+    "speed": "slow",
+    "effect": { "type": "drawCards", "count": 2, "player": "self" }
+  },
+  {
+    "id": "the-beacons-are-lit",
+    "name": "The Beacons Are Lit",
+    "faction": "fellowship",
+    "kind": "story",
+    "rulesText": "Slow — Your active character gets +2 power permanently.",
+    "artId": "the-beacons-are-lit",
+    "flavorText": "Hope is kindled.",
+    "cost": { "total": 2 },
+    "speed": "slow",
+    "effect": {
+      "type": "buffStat",
+      "stat": "power",
+      "amount": 2,
+      "duration": "permanent",
+      "target": { "scope": "ownActive" }
+    }
+  }
+]
