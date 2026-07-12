@@ -52,13 +52,24 @@ function resolveAttack(
       },
     },
   };
-  return {
+  next = {
     ...next,
     log: [
       ...next.log,
       { turn: next.turn, player: attackerPlayer, message: `${attacker.cardId} attacks for ${damage}.`, kind: "attack" },
     ],
   };
+  // onAttack abilities ride along with the resolved attack (extra arrows,
+  // corruption from the Witch-king's blade, ...).
+  const attackerDef = cardDb.getCard(attacker.cardId);
+  if (attackerDef.kind === "character") {
+    for (const ability of attackerDef.abilities) {
+      if (ability.trigger === "onAttack") {
+        next = applyEffect(next, attackerPlayer, ability.effect);
+      }
+    }
+  }
+  return next;
 }
 
 /** Pops and resolves the top of the stack (LIFO), reusing the same effect interpreter non-stack effects use. */

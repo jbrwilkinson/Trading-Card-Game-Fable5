@@ -34,6 +34,7 @@ function buildPlayerState(playerId: PlayerId, deckCardIds: string[], rngSeed: st
     hopeTotal: STARTING_HOPE,
     corruptionTrack: 0,
     hasPlayedLocationThisTurn: false,
+    hasRetreatedThisTurn: false,
     deckedOut: false,
   };
 }

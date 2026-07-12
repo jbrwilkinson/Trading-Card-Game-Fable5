@@ -18,13 +18,15 @@
     "name": "Samwise Gamgee",
     "faction": "fellowship",
     "kind": "character",
-    "rulesText": "",
+    "rulesText": "At the start of your turn: heal 1 damage from your active character.",
     "artId": "samwise-gamgee",
     "flavorText": "\"There's some good in this world, Mr. Frodo. And it's worth fighting for.\"",
     "cost": { "total": 2 },
     "power": 2,
     "resilience": 4,
-    "abilities": [],
+    "abilities": [
+      { "trigger": "onTurnStart", "effect": { "type": "heal", "amount": 1, "target": { "scope": "ownActive" } } }
+    ],
     "tags": ["hobbit"]
   },
   {
@@ -73,12 +75,15 @@
     "name": "Legolas",
     "faction": "fellowship",
     "kind": "character",
-    "rulesText": "",
+    "rulesText": "When Legolas attacks: deal 1 extra damage to the opponent's active character.",
     "artId": "legolas",
+    "flavorText": "\"That still only counts as one!\" — Gimli",
     "cost": { "total": 3 },
     "power": 3,
     "resilience": 4,
-    "abilities": [],
+    "abilities": [
+      { "trigger": "onAttack", "effect": { "type": "damage", "amount": 1, "target": { "scope": "opponentActive" } } }
+    ],
     "tags": ["elf", "archer"]
   },
   {

@@ -98,13 +98,15 @@
     "name": "The Witch-king of Angmar",
     "faction": "mordor",
     "kind": "character",
-    "rulesText": "",
+    "rulesText": "When the Witch-king attacks: the opponent's corruption rises by 1.",
     "artId": "witch-king-of-angmar",
     "flavorText": "\"No man can kill me.\"",
     "cost": { "total": 6 },
     "power": 7,
     "resilience": 5,
-    "abilities": [],
+    "abilities": [
+      { "trigger": "onAttack", "effect": { "type": "corruptionTick", "amount": 1, "player": "opponent" } }
+    ],
     "tags": ["wraith", "lord"]
   },
   {
@@ -151,13 +153,15 @@
     "name": "Shelob the Great",
     "faction": "mordor",
     "kind": "character",
-    "rulesText": "",
+    "rulesText": "At the start of your turn: deal 1 damage to the opponent's active character (venom).",
     "artId": "shelob",
     "flavorText": "Far and wide her lesser broods spread, but none could rival her.",
     "cost": { "total": 4 },
     "power": 5,
     "resilience": 3,
-    "abilities": [],
+    "abilities": [
+      { "trigger": "onTurnStart", "effect": { "type": "damage", "amount": 1, "target": { "scope": "opponentActive" } } }
+    ],
     "tags": ["spider", "ancient"]
   },
   {

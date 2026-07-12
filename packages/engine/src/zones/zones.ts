@@ -137,6 +137,7 @@ export function untapAll(state: GameState, playerId: PlayerId): GameState {
     bench: player.bench.map(untap),
     resourcePool: 0,
     hasPlayedLocationThisTurn: false,
+    hasRetreatedThisTurn: false,
   });
 }
 

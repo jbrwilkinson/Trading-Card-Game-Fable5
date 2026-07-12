@@ -56,13 +56,15 @@
     "name": "Éowyn, Shieldmaiden",
     "faction": "rohan",
     "kind": "character",
-    "rulesText": "",
+    "rulesText": "When Éowyn attacks: deal 1 extra damage to the opponent's active character.",
     "artId": "eowyn",
     "flavorText": "\"I am no man.\"",
     "cost": { "total": 2 },
     "power": 2,
     "resilience": 3,
-    "abilities": [],
+    "abilities": [
+      { "trigger": "onAttack", "effect": { "type": "damage", "amount": 1, "target": { "scope": "opponentActive" } } }
+    ],
     "tags": ["human", "shieldmaiden"]
   },
   {

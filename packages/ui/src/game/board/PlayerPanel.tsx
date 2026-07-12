@@ -31,7 +31,10 @@ export function PlayerPanel({
     let clickAction: Action | undefined;
     if (isViewer && !targetableIds) {
       if (slot === "bench") {
-        clickAction = findAction((a) => a.type === "moveToActive" && a.instanceId === instance.instanceId);
+        // With no active, a bench click promotes; with an active it retreats into the clicked character.
+        clickAction =
+          findAction((a) => a.type === "moveToActive" && a.instanceId === instance.instanceId) ??
+          findAction((a) => a.type === "retreat" && a.benchInstanceId === instance.instanceId);
       } else {
         clickAction = findAction((a) => a.type === "declareAttack" && a.attackerInstanceId === instance.instanceId);
       }

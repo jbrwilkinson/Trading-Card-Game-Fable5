@@ -31,6 +31,7 @@ export interface PlayerState {
   hopeTotal: number;
   corruptionTrack: number;
   hasPlayedLocationThisTurn: boolean;
+  hasRetreatedThisTurn: boolean;
   deckedOut: boolean;
 }
 

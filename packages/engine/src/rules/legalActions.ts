@@ -66,6 +66,12 @@ export function legalActions(state: GameState, playerId: PlayerId, cardDb: CardD
           actions.push({ type: "moveToActive", player: playerId, instanceId: c.instanceId });
         }
       }
+      // Retreat: swap the active character with a bench character, once per turn.
+      if (player.active && player.bench.length > 0 && !player.hasRetreatedThisTurn) {
+        for (const c of player.bench) {
+          actions.push({ type: "retreat", player: playerId, benchInstanceId: c.instanceId });
+        }
+      }
       for (const card of player.hand) {
         const def = cardDb.getCard(card.cardId);
         if (def.kind === "story" && def.cost.total <= player.resourcePool) {

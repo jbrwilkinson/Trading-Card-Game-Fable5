@@ -3,6 +3,7 @@ import type { Action, PlayerId } from "@lotr-tcg/engine";
 import { chooseAction, chooseResponse } from "@lotr-tcg/ai";
 import { useGameEngine, type GameSetup } from "../engine-adapter/useGameEngine.js";
 import { useSoundEffects } from "../audio/useSoundEffects.js";
+import { isMusicPlaying, startMusic, stopMusic } from "../audio/music.js";
 import { PlayerPanel } from "./board/PlayerPanel.js";
 import { Hand, type TargetingRequest } from "./hand/Hand.js";
 import { PassScreen } from "./hotseat/PassScreen.js";
@@ -50,6 +51,24 @@ export function GameScreen({ setup, onExit }: GameScreenProps) {
   );
   const opponent: PlayerId = viewer === "player1" ? "player2" : "player1";
   const { muted, toggleMute } = useSoundEffects(state, isVsAI ? "player1" : null);
+  const [musicOn, setMusicOn] = useState(true);
+
+  // Ambient theme keyed to the majority faction of player1's deck; lives for
+  // the whole game screen and fades out on exit.
+  useEffect(() => {
+    if (!musicOn) {
+      stopMusic();
+      return;
+    }
+    const tally = new Map<string, number>();
+    for (const cardId of setup.player1DeckCardIds) {
+      const faction = cardDb.getCard(cardId).faction;
+      tally.set(faction, (tally.get(faction) ?? 0) + 1);
+    }
+    const faction = [...tally.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? "neutral";
+    if (!isMusicPlaying()) startMusic(faction as Parameters<typeof startMusic>[0]);
+    return () => stopMusic();
+  }, [musicOn, setup.player1DeckCardIds, cardDb]);
 
   // "start" and "end" phases have no decisions — advance through them automatically.
   // The ref guard makes this idempotent per game moment, since React StrictMode
@@ -179,6 +198,13 @@ export function GameScreen({ setup, onExit }: GameScreenProps) {
             )}
           </span>
         )}
+        <button
+          className="btn btn--quiet"
+          onClick={() => setMusicOn((on) => !on)}
+          title={musicOn ? "Stop ambient music" : "Play ambient music"}
+        >
+          {musicOn ? "🎵" : "🔕"}
+        </button>
         <button className="btn btn--quiet" onClick={toggleMute} title={muted ? "Unmute sounds" : "Mute sounds"}>
           {muted ? "🔇" : "🔊"}
         </button>

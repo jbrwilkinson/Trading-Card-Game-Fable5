@@ -24,6 +24,47 @@ function log(state: GameState, player: PlayerId, message: string, kind: GameStat
   return { ...state, log: [...state.log, { turn: state.turn, player, message, kind }] };
 }
 
+/** Removes every "turn"-duration status effect from both players' characters. */
+function expireTurnBuffs(state: GameState): GameState {
+  const strip = (c: GameState["players"]["player1"]["bench"][number]) =>
+    c.statusEffects.some((s) => s.duration === "turn")
+      ? { ...c, statusEffects: c.statusEffects.filter((s) => s.duration !== "turn") }
+      : c;
+  let next = state;
+  for (const playerId of ["player1", "player2"] as PlayerId[]) {
+    const player = next.players[playerId];
+    next = {
+      ...next,
+      players: {
+        ...next.players,
+        [playerId]: {
+          ...player,
+          active: player.active ? strip(player.active) : null,
+          bench: player.bench.map(strip),
+        },
+      },
+    };
+  }
+  return next;
+}
+
+/** Fires onTurnStart abilities for the active player's characters (active slot first, then bench). */
+function fireTurnStartAbilities(state: GameState, cardDb: CardDatabase): GameState {
+  let next = state;
+  const player = next.players[next.activePlayer];
+  const characters = [player.active, ...player.bench].filter((c): c is NonNullable<typeof c> => c !== null);
+  for (const instance of characters) {
+    const def = cardDb.getCard(instance.cardId);
+    if (def.kind !== "character") continue;
+    for (const ability of def.abilities) {
+      if (ability.trigger === "onTurnStart") {
+        next = applyEffect(next, next.activePlayer, ability.effect);
+      }
+    }
+  }
+  return next;
+}
+
 /** Advances phase; "start" and "end" are automatic (no player action pauses there) — see reducer notes. */
 function advancePhase(state: GameState, cardDb: CardDatabase): GameState {
   const currentIndex = PHASE_ORDER.indexOf(state.phase);
@@ -32,7 +73,9 @@ function advancePhase(state: GameState, cardDb: CardDatabase): GameState {
   let next: GameState;
   if (isLastPhase) {
     const nextPlayer = opponentOf(state.activePlayer);
-    next = { ...state, activePlayer: nextPlayer, turn: state.turn + 1, phase: "start" };
+    // Until-end-of-turn buffs wear off as the turn passes.
+    next = expireTurnBuffs(state);
+    next = { ...next, activePlayer: nextPlayer, turn: next.turn + 1, phase: "start" };
     next = log(next, nextPlayer, `Turn ${next.turn} begins.`, "phase");
   } else {
     next = { ...state, phase: PHASE_ORDER[currentIndex + 1] as Phase };
@@ -45,6 +88,7 @@ function advancePhase(state: GameState, cardDb: CardDatabase): GameState {
       next = drawCard(next, next.activePlayer);
       next = log(next, next.activePlayer, "Drew a card.", "draw");
     }
+    next = fireTurnStartAbilities(next, cardDb);
     return advancePhase(next, cardDb); // start has no pausable actions, fall through to resource
   }
 
@@ -132,6 +176,23 @@ function applyAction(state: GameState, action: Action, cardDb: CardDatabase): Ga
     }
     case "moveToActive":
       return moveToActive(state, action.player, action.instanceId);
+    case "retreat": {
+      const player = state.players[action.player];
+      if (!player.active) return state;
+      // moveToActive already swaps: the chosen bench character becomes active
+      // and the old active goes to the back of the bench.
+      const swapped = moveToActive(state, action.player, action.benchInstanceId);
+      if (swapped === state) return state;
+      let next: GameState = {
+        ...swapped,
+        players: {
+          ...swapped.players,
+          [action.player]: { ...swapped.players[action.player], hasRetreatedThisTurn: true },
+        },
+      };
+      next = log(next, action.player, `${player.active.cardId} retreats to the bench.`, "play");
+      return next;
+    }
     case "declareAttack": {
       const attacker = state.players[action.player].active;
       if (!attacker) return state;
