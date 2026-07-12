@@ -1,0 +1,32 @@
+[
+  {
+    "id": "osgiliath",
+    "name": "Osgiliath",
+    "faction": "gondor",
+    "kind": "location",
+    "rulesText": "Tap for 1 resource.",
+    "artId": "osgiliath",
+    "flavorText": "The ruined citadel on the Anduin, contested night and day.",
+    "resourceValue": 1
+  },
+  {
+    "id": "minas-tirith",
+    "name": "Minas Tirith",
+    "faction": "gondor",
+    "kind": "location",
+    "rulesText": "Tap for 2 resources. When played: heal 1 damage from your active character.",
+    "artId": "minas-tirith",
+    "flavorText": "The White City, seven-tiered and shining.",
+    "resourceValue": 2,
+    "enterEffect": { "type": "heal", "amount": 1, "target": { "scope": "ownActive" } }
+  },
+  {
+    "id": "dol-amroth",
+    "name": "Dol Amroth",
+    "faction": "gondor",
+    "kind": "location",
+    "rulesText": "Tap for 2 resources.",
+    "artId": "dol-amroth",
+    "resourceValue": 2
+  }
+]

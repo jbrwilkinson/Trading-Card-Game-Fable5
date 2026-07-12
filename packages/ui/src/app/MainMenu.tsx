@@ -1,18 +1,23 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { STARTER_DECKS } from "@lotr-tcg/card-data";
 import type { Difficulty } from "@lotr-tcg/ai";
 import type { GameMode, GameSetup } from "../engine-adapter/useGameEngine.js";
+import { loadCustomDecks } from "./deck-storage.js";
 
 interface MainMenuProps {
   onStart: (setup: GameSetup) => void;
+  onOpenDeckBuilder: () => void;
 }
 
-export function MainMenu({ onStart }: MainMenuProps) {
-  const [p1DeckId, setP1DeckId] = useState(STARTER_DECKS[0]!.id);
-  const [p2DeckId, setP2DeckId] = useState(STARTER_DECKS[1]!.id);
+export function MainMenu({ onStart, onOpenDeckBuilder }: MainMenuProps) {
+  const decks = useMemo(() => [...STARTER_DECKS, ...loadCustomDecks()], []);
+  const [p1DeckId, setP1DeckId] = useState(decks[0]!.id);
+  const [p2DeckId, setP2DeckId] = useState(decks[3]?.id ?? decks[0]!.id);
   const [difficulty, setDifficulty] = useState<Difficulty>("normal");
 
-  const deckById = (id: string) => STARTER_DECKS.find((d) => d.id === id)!;
+  // Fall back to the first deck if an id no longer resolves (e.g. a custom
+  // deck was renamed/deleted in localStorage after being selected).
+  const deckById = (id: string) => decks.find((d) => d.id === id) ?? decks[0]!;
 
   const start = (mode: GameMode) => {
     onStart({
@@ -37,7 +42,7 @@ export function MainMenu({ onStart }: MainMenuProps) {
             <label key={slot} className="menu__deck-pick">
               <span>{slot === "player1" ? "Your deck (Player 1)" : "Opponent deck (Player 2 / computer)"}</span>
               <select value={value} onChange={(e) => setValue(e.target.value)}>
-                {STARTER_DECKS.map((deck) => (
+                {decks.map((deck) => (
                   <option key={deck.id} value={deck.id}>
                     {deck.name}
                   </option>
@@ -70,6 +75,10 @@ export function MainMenu({ onStart }: MainMenuProps) {
           <small className="menu__note">Pass the device between turns</small>
         </div>
       </div>
+
+      <button className="btn menu__builder-link" onClick={onOpenDeckBuilder}>
+        Deck builder
+      </button>
     </div>
   );
 }

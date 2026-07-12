@@ -1,0 +1,35 @@
+[
+  {
+    "id": "the-white-tree-blooms",
+    "name": "The White Tree Blooms",
+    "faction": "gondor",
+    "kind": "story",
+    "rulesText": "Slow — Heal 3 damage from your active character.",
+    "artId": "the-white-tree-blooms",
+    "cost": { "total": 2 },
+    "speed": "slow",
+    "effect": { "type": "heal", "amount": 3, "target": { "scope": "ownActive" } }
+  },
+  {
+    "id": "reinforcements-from-the-fiefs",
+    "name": "Reinforcements from the Fiefs",
+    "faction": "gondor",
+    "kind": "story",
+    "rulesText": "Slow — Draw 2 cards.",
+    "artId": "reinforcements-from-the-fiefs",
+    "cost": { "total": 2 },
+    "speed": "slow",
+    "effect": { "type": "drawCards", "count": 2, "player": "self" }
+  },
+  {
+    "id": "beacon-summons",
+    "name": "Beacon Summons",
+    "faction": "gondor",
+    "kind": "story",
+    "rulesText": "Slow — Draw 1 card.",
+    "artId": "beacon-summons",
+    "cost": { "total": 1 },
+    "speed": "slow",
+    "effect": { "type": "drawCards", "count": 1, "player": "self" }
+  }
+]

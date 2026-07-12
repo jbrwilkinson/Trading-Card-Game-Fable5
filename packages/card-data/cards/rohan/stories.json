@@ -1,0 +1,42 @@
+[
+  {
+    "id": "muster-of-rohan",
+    "name": "The Muster of Rohan",
+    "faction": "rohan",
+    "kind": "story",
+    "rulesText": "Slow — Draw 2 cards.",
+    "artId": "muster-of-rohan",
+    "cost": { "total": 2 },
+    "speed": "slow",
+    "effect": { "type": "drawCards", "count": 2, "player": "self" }
+  },
+  {
+    "id": "ride-out-at-dawn",
+    "name": "Ride Out at Dawn",
+    "faction": "rohan",
+    "kind": "story",
+    "rulesText": "Slow — Your active character gets +2 power permanently.",
+    "artId": "ride-out-at-dawn",
+    "flavorText": "\"Fell deeds awake. Now for wrath, now for ruin, and a red dawn.\"",
+    "cost": { "total": 2 },
+    "speed": "slow",
+    "effect": {
+      "type": "buffStat",
+      "stat": "power",
+      "amount": 2,
+      "duration": "permanent",
+      "target": { "scope": "ownActive" }
+    }
+  },
+  {
+    "id": "song-of-the-mark",
+    "name": "Song of the Mark",
+    "faction": "rohan",
+    "kind": "story",
+    "rulesText": "Slow — Heal 3 damage from your active character.",
+    "artId": "song-of-the-mark",
+    "cost": { "total": 1 },
+    "speed": "slow",
+    "effect": { "type": "heal", "amount": 3, "target": { "scope": "ownActive" } }
+  }
+]

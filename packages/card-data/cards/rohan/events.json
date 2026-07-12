@@ -1,0 +1,49 @@
+[
+  {
+    "id": "charge-of-the-rohirrim",
+    "name": "Charge of the Rohirrim",
+    "faction": "rohan",
+    "kind": "event",
+    "rulesText": "Fast — Your active character gets +3 power until end of turn.",
+    "artId": "charge-of-the-rohirrim",
+    "flavorText": "\"Death! Death! DEATH!\"",
+    "cost": { "total": 2 },
+    "speed": "fast",
+    "effect": {
+      "type": "buffStat",
+      "stat": "power",
+      "amount": 3,
+      "duration": "turn",
+      "target": { "scope": "ownActive" }
+    }
+  },
+  {
+    "id": "shieldwall",
+    "name": "Shieldwall",
+    "faction": "rohan",
+    "kind": "event",
+    "rulesText": "Fast — Your active character gets +2 resilience until end of turn.",
+    "artId": "shieldwall",
+    "cost": { "total": 1 },
+    "speed": "fast",
+    "effect": {
+      "type": "buffStat",
+      "stat": "resilience",
+      "amount": 2,
+      "duration": "turn",
+      "target": { "scope": "ownActive" }
+    }
+  },
+  {
+    "id": "horn-of-helm-hammerhand",
+    "name": "Horn of Helm Hammerhand",
+    "faction": "rohan",
+    "kind": "event",
+    "rulesText": "Fast — Deal 1 damage to the opponent's active character.",
+    "artId": "horn-of-helm-hammerhand",
+    "flavorText": "Once more it echoed in the Deep.",
+    "cost": { "total": 1 },
+    "speed": "fast",
+    "effect": { "type": "damage", "amount": 1, "target": { "scope": "opponentActive" } }
+  }
+]

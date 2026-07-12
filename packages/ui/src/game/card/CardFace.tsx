@@ -1,13 +1,6 @@
 import type { Card, CardDatabase, CardInstance } from "@lotr-tcg/engine";
 import { getEffectivePower, getEffectiveResilience } from "@lotr-tcg/engine";
-
-const KIND_GLYPHS: Record<Card["kind"], string> = {
-  character: "⚔",
-  location: "⛰",
-  item: "🛡",
-  event: "⚡",
-  story: "📜",
-};
+import { CardArt } from "./CardArt.js";
 
 interface CardFaceProps {
   card: Card;
@@ -51,7 +44,7 @@ export function CardFace({ card, instance, cardDb, size = "board", highlighted, 
         {card.kind === "location" && <span className="card__cost card__cost--resource">+{card.resourceValue}</span>}
       </div>
       <div className="card__art">
-        <span className="card__glyph">{KIND_GLYPHS[card.kind]}</span>
+        <CardArt card={card} />
       </div>
       {size === "hand" && card.rulesText && <div className="card__rules">{card.rulesText}</div>}
       {card.kind === "character" && (

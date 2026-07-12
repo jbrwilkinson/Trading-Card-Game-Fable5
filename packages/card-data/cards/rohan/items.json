@@ -1,0 +1,36 @@
+[
+  {
+    "id": "herugrim",
+    "name": "Herugrim",
+    "faction": "rohan",
+    "kind": "item",
+    "rulesText": "Attached character gets +2 power.",
+    "artId": "herugrim",
+    "flavorText": "The sword of the Kings of the Mark.",
+    "cost": { "total": 2 },
+    "attachTarget": "character",
+    "statModifiers": { "power": 2 }
+  },
+  {
+    "id": "riders-spear",
+    "name": "Rider's Spear",
+    "faction": "rohan",
+    "kind": "item",
+    "rulesText": "Attached character gets +1 power.",
+    "artId": "riders-spear",
+    "cost": { "total": 1 },
+    "attachTarget": "character",
+    "statModifiers": { "power": 1 }
+  },
+  {
+    "id": "shield-of-the-mark",
+    "name": "Shield of the Mark",
+    "faction": "rohan",
+    "kind": "item",
+    "rulesText": "Attached character gets +2 resilience.",
+    "artId": "shield-of-the-mark",
+    "cost": { "total": 1 },
+    "attachTarget": "character",
+    "statModifiers": { "resilience": 2 }
+  }
+]

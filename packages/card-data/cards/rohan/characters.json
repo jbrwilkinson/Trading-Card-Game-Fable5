@@ -1,0 +1,145 @@
+[
+  {
+    "id": "westfold-rider",
+    "name": "Westfold Rider",
+    "faction": "rohan",
+    "kind": "character",
+    "rulesText": "",
+    "artId": "westfold-rider",
+    "cost": { "total": 1 },
+    "power": 2,
+    "resilience": 1,
+    "abilities": [],
+    "tags": ["human", "rider"]
+  },
+  {
+    "id": "gamling",
+    "name": "Gamling",
+    "faction": "rohan",
+    "kind": "character",
+    "rulesText": "",
+    "artId": "gamling",
+    "cost": { "total": 1 },
+    "power": 1,
+    "resilience": 2,
+    "abilities": [],
+    "tags": ["human", "guard"]
+  },
+  {
+    "id": "rohirrim-lancer",
+    "name": "Rohirrim Lancer",
+    "faction": "rohan",
+    "kind": "character",
+    "rulesText": "",
+    "artId": "rohirrim-lancer",
+    "cost": { "total": 2 },
+    "power": 3,
+    "resilience": 1,
+    "abilities": [],
+    "tags": ["human", "rider"]
+  },
+  {
+    "id": "hama",
+    "name": "Háma, Doorward of the King",
+    "faction": "rohan",
+    "kind": "character",
+    "rulesText": "",
+    "artId": "hama",
+    "cost": { "total": 2 },
+    "power": 2,
+    "resilience": 3,
+    "abilities": [],
+    "tags": ["human", "guard"]
+  },
+  {
+    "id": "eowyn",
+    "name": "Éowyn, Shieldmaiden",
+    "faction": "rohan",
+    "kind": "character",
+    "rulesText": "",
+    "artId": "eowyn",
+    "flavorText": "\"I am no man.\"",
+    "cost": { "total": 2 },
+    "power": 2,
+    "resilience": 3,
+    "abilities": [],
+    "tags": ["human", "shieldmaiden"]
+  },
+  {
+    "id": "eomer",
+    "name": "Éomer, Third Marshal",
+    "faction": "rohan",
+    "kind": "character",
+    "rulesText": "",
+    "artId": "eomer",
+    "cost": { "total": 3 },
+    "power": 4,
+    "resilience": 2,
+    "abilities": [],
+    "tags": ["human", "rider", "marshal"]
+  },
+  {
+    "id": "theodred",
+    "name": "Théodred, Prince of Rohan",
+    "faction": "rohan",
+    "kind": "character",
+    "rulesText": "",
+    "artId": "theodred",
+    "cost": { "total": 3 },
+    "power": 3,
+    "resilience": 3,
+    "abilities": [],
+    "tags": ["human", "rider"]
+  },
+  {
+    "id": "royal-guard",
+    "name": "Royal Guard of Edoras",
+    "faction": "rohan",
+    "kind": "character",
+    "rulesText": "",
+    "artId": "royal-guard",
+    "cost": { "total": 3 },
+    "power": 2,
+    "resilience": 5,
+    "abilities": [],
+    "tags": ["human", "guard"]
+  },
+  {
+    "id": "erkenbrand",
+    "name": "Erkenbrand of the Westfold",
+    "faction": "rohan",
+    "kind": "character",
+    "rulesText": "",
+    "artId": "erkenbrand",
+    "cost": { "total": 4 },
+    "power": 4,
+    "resilience": 4,
+    "abilities": [],
+    "tags": ["human", "marshal"]
+  },
+  {
+    "id": "theoden-king",
+    "name": "Théoden, King of the Mark",
+    "faction": "rohan",
+    "kind": "character",
+    "rulesText": "When played: your active character gets +1 power permanently.",
+    "artId": "theoden-king",
+    "flavorText": "\"Arise, arise, Riders of Théoden!\"",
+    "cost": { "total": 4 },
+    "power": 4,
+    "resilience": 4,
+    "abilities": [
+      {
+        "trigger": "onPlay",
+        "effect": {
+          "type": "buffStat",
+          "stat": "power",
+          "amount": 1,
+          "duration": "permanent",
+          "target": { "scope": "ownActive" }
+        }
+      }
+    ],
+    "tags": ["human", "king"]
+  }
+]

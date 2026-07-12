@@ -21,5 +21,17 @@
     "cost": { "total": 1 },
     "attachTarget": "character",
     "statModifiers": { "resilience": 2 }
+  },
+  {
+    "id": "grond",
+    "name": "Grond, Hammer of the Underworld",
+    "faction": "mordor",
+    "kind": "item",
+    "rulesText": "Attached character gets +3 power.",
+    "artId": "grond",
+    "flavorText": "In shape it was like a great wolf's head; on it spells of ruin lay.",
+    "cost": { "total": 3 },
+    "attachTarget": "character",
+    "statModifiers": { "power": 3 }
   }
 ]

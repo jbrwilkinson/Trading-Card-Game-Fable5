@@ -65,4 +65,56 @@ export const MORDOR_DECK: DeckDefinition = {
   ],
 };
 
-export const STARTER_DECKS: DeckDefinition[] = [FELLOWSHIP_DECK, MORDOR_DECK];
+export const ROHAN_DECK: DeckDefinition = {
+  id: "rohan-starter",
+  name: "Riders of Rohan",
+  description: "Fast, hard-hitting cavalry with battle-cry buffs that strike before the foe can settle.",
+  cardIds: [
+    ...copies("edoras", 4),
+    ...copies("helms-deep", 3),
+    ...copies("meduseld", 3),
+    ...copies("westfold-rider", 2),
+    ...copies("gamling", 1),
+    ...copies("rohirrim-lancer", 3),
+    ...copies("eomer", 2),
+    ...copies("eowyn", 2),
+    ...copies("theodred", 1),
+    ...copies("royal-guard", 1),
+    ...copies("theoden-king", 1),
+    ...copies("erkenbrand", 1),
+    ...copies("herugrim", 1),
+    ...copies("riders-spear", 1),
+    ...copies("charge-of-the-rohirrim", 1),
+    ...copies("horn-of-helm-hammerhand", 1),
+    ...copies("muster-of-rohan", 1),
+    ...copies("ride-out-at-dawn", 1),
+  ],
+};
+
+export const GONDOR_DECK: DeckDefinition = {
+  id: "gondor-starter",
+  name: "Stewards of Gondor",
+  description: "Stalwart defenders of the White City who outlast the enemy behind high walls.",
+  cardIds: [
+    ...copies("osgiliath", 4),
+    ...copies("minas-tirith", 3),
+    ...copies("dol-amroth", 3),
+    ...copies("soldier-of-the-tower", 2),
+    ...copies("beregond", 1),
+    ...copies("citadel-guard", 2),
+    ...copies("ranger-of-ithilien", 3),
+    ...copies("madril", 1),
+    ...copies("denethor", 1),
+    ...copies("faramir", 2),
+    ...copies("knight-of-dol-amroth", 1),
+    ...copies("forlong-the-fat", 1),
+    ...copies("tower-shield", 1),
+    ...copies("blade-of-westernesse", 1),
+    ...copies("rangers-ambush", 1),
+    ...copies("for-gondor", 1),
+    ...copies("the-white-tree-blooms", 1),
+    ...copies("reinforcements-from-the-fiefs", 1),
+  ],
+};
+
+export const STARTER_DECKS: DeckDefinition[] = [FELLOWSHIP_DECK, ROHAN_DECK, GONDOR_DECK, MORDOR_DECK];

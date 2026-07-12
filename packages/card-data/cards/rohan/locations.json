@@ -1,0 +1,32 @@
+[
+  {
+    "id": "edoras",
+    "name": "Edoras",
+    "faction": "rohan",
+    "kind": "location",
+    "rulesText": "Tap for 1 resource.",
+    "artId": "edoras",
+    "flavorText": "The courts of King Théoden, crowned in gold.",
+    "resourceValue": 1
+  },
+  {
+    "id": "helms-deep",
+    "name": "Helm's Deep",
+    "faction": "rohan",
+    "kind": "location",
+    "rulesText": "Tap for 2 resources. When played: heal 1 damage from your active character.",
+    "artId": "helms-deep",
+    "flavorText": "The fortress that has never fallen while men defended it.",
+    "resourceValue": 2,
+    "enterEffect": { "type": "heal", "amount": 1, "target": { "scope": "ownActive" } }
+  },
+  {
+    "id": "meduseld",
+    "name": "Meduseld, the Golden Hall",
+    "faction": "rohan",
+    "kind": "location",
+    "rulesText": "Tap for 2 resources.",
+    "artId": "meduseld",
+    "resourceValue": 2
+  }
+]

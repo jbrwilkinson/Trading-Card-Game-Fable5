@@ -1,0 +1,71 @@
+[
+  {
+    "id": "gollum",
+    "name": "Gollum",
+    "faction": "neutral",
+    "kind": "character",
+    "rulesText": "",
+    "artId": "gollum",
+    "flavorText": "\"My precious…\"",
+    "cost": { "total": 2 },
+    "power": 2,
+    "resilience": 2,
+    "abilities": [],
+    "tags": ["creature"]
+  },
+  {
+    "id": "radagast-the-brown",
+    "name": "Radagast the Brown",
+    "faction": "neutral",
+    "kind": "character",
+    "rulesText": "When played: heal 2 damage from your active character.",
+    "artId": "radagast-the-brown",
+    "cost": { "total": 3 },
+    "power": 2,
+    "resilience": 4,
+    "abilities": [{ "trigger": "onPlay", "effect": { "type": "heal", "amount": 2, "target": { "scope": "ownActive" } } }],
+    "tags": ["wizard"]
+  },
+  {
+    "id": "beorn",
+    "name": "Beorn the Skin-changer",
+    "faction": "neutral",
+    "kind": "character",
+    "rulesText": "",
+    "artId": "beorn",
+    "flavorText": "He can be appalling when he is angry, though he is kind enough if humoured.",
+    "cost": { "total": 4 },
+    "power": 5,
+    "resilience": 4,
+    "abilities": [],
+    "tags": ["skin-changer"]
+  },
+  {
+    "id": "tom-bombadil",
+    "name": "Tom Bombadil",
+    "faction": "neutral",
+    "kind": "character",
+    "rulesText": "",
+    "artId": "tom-bombadil",
+    "flavorText": "Old Tom Bombadil is a merry fellow; bright blue his jacket is, and his boots are yellow.",
+    "cost": { "total": 3 },
+    "power": 2,
+    "resilience": 6,
+    "abilities": [],
+    "tags": ["enigma"]
+  },
+  {
+    "id": "treebeard",
+    "name": "Treebeard, Eldest of Ents",
+    "faction": "neutral",
+    "kind": "character",
+    "rulesText": "",
+    "artId": "treebeard",
+    "flavorText": "\"Do not be hasty.\"",
+    "cost": { "total": 5 },
+    "power": 5,
+    "resilience": 6,
+    "abilities": [],
+    "tags": ["ent"]
+  }
+]

@@ -88,6 +88,33 @@ describe("dispatch", () => {
     expect(state.players.player1.active?.tapped).toBe(true);
   });
 
+  it("fires a character's onPlay ability when played to the bench", () => {
+    let state: GameState = { ...freshState(), phase: "main" };
+    state = withHand(state, "player1", ["gandalf-herald"]);
+    state = {
+      ...state,
+      players: { ...state.players, player1: { ...state.players.player1, resourcePool: 4 } },
+    };
+    const gandalf = state.players.player1.hand.find((c) => c.cardId === "gandalf-herald")!;
+    const deckBefore = state.players.player1.deck.length;
+    state = dispatch(state, { type: "playCharacterToBench", player: "player1", instanceId: gandalf.instanceId }, cardDb);
+    // Hand: played Gandalf (-1) and drew a card from the onPlay trigger (+1) → net 0.
+    expect(state.players.player1.hand).toHaveLength(1);
+    expect(state.players.player1.deck.length).toBe(deckBefore - 1);
+    expect(state.players.player1.bench.some((c) => c.cardId === "gandalf-herald")).toBe(true);
+  });
+
+  it("fires a location's enterEffect when played", () => {
+    let state: GameState = { ...freshState(), phase: "resource" };
+    state = withHand(state, "player1", ["grey-havens"]);
+    const havens = state.players.player1.hand.find((c) => c.cardId === "grey-havens")!;
+    const deckBefore = state.players.player1.deck.length;
+    state = dispatch(state, { type: "playLocation", player: "player1", instanceId: havens.instanceId }, cardDb);
+    expect(state.players.player1.locationsInPlay).toHaveLength(1);
+    expect(state.players.player1.deck.length).toBe(deckBefore - 1); // drew from enterEffect
+    expect(state.players.player1.hand).toHaveLength(1); // played the location, drew a replacement
+  });
+
   it("sets state.winner and stops accepting further actions once Hope reaches 0", () => {
     let state: GameState = { ...freshState(), phase: "combat" };
     state = withHand(state, "player1", ["aragorn-strider"]);

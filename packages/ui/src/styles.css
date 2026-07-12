@@ -116,6 +116,86 @@ body {
   border-radius: 4px;
 }
 
+.menu__builder-link {
+  margin-top: 2rem;
+}
+
+/* ---------- deck builder ---------- */
+.builder {
+  padding: 1rem 1.5rem 2rem;
+}
+.builder__header h1 {
+  color: #d8b95c;
+  margin: 0.2rem 0 0.8rem;
+}
+.builder__factions {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+  flex-wrap: wrap;
+}
+.btn--active {
+  box-shadow: 0 0 0 2px #ffd97a;
+}
+.builder__controls {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.builder__name {
+  font-family: inherit;
+  padding: 0.4rem 0.6rem;
+  background: #262233;
+  color: inherit;
+  border: 1px solid #55496a;
+  border-radius: 4px;
+  min-width: 14rem;
+}
+.builder__count {
+  font-weight: bold;
+  color: #ff9d7a;
+}
+.builder__count--ok {
+  color: #a8d08d;
+}
+.builder__problems {
+  margin-top: 0.5rem;
+  color: #ff9d7a;
+  font-size: 0.9rem;
+}
+.builder__saved {
+  margin-top: 0.5rem;
+  color: #a8d08d;
+  font-size: 0.9rem;
+}
+.builder__pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+.builder__entry {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  align-items: center;
+}
+.builder__adjust {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.builder__copies {
+  min-width: 2.4rem;
+  text-align: center;
+  font-size: 0.85rem;
+}
+.btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
 /* ---------- pass screen ---------- */
 .pass-screen {
   margin: auto;
@@ -320,12 +400,10 @@ body {
   align-items: center;
   justify-content: center;
 }
-.card__glyph {
-  font-size: 1.8rem;
-  opacity: 0.8;
-}
-.card--hand .card__glyph {
-  font-size: 2.6rem;
+.card-art-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 .card__rules {
   font-size: 0.62rem;

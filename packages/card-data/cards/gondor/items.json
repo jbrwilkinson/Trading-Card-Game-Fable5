@@ -1,0 +1,35 @@
+[
+  {
+    "id": "tower-shield",
+    "name": "Tower Shield",
+    "faction": "gondor",
+    "kind": "item",
+    "rulesText": "Attached character gets +2 resilience.",
+    "artId": "tower-shield",
+    "cost": { "total": 1 },
+    "attachTarget": "character",
+    "statModifiers": { "resilience": 2 }
+  },
+  {
+    "id": "blade-of-westernesse",
+    "name": "Blade of Westernesse",
+    "faction": "gondor",
+    "kind": "item",
+    "rulesText": "Attached character gets +2 power.",
+    "artId": "blade-of-westernesse",
+    "cost": { "total": 2 },
+    "attachTarget": "character",
+    "statModifiers": { "power": 2 }
+  },
+  {
+    "id": "white-tree-banner",
+    "name": "Banner of the White Tree",
+    "faction": "gondor",
+    "kind": "item",
+    "rulesText": "Attached character gets +1 power and +1 resilience.",
+    "artId": "white-tree-banner",
+    "cost": { "total": 2 },
+    "attachTarget": "character",
+    "statModifiers": { "power": 1, "resilience": 1 }
+  }
+]

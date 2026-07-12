@@ -1,14 +1,27 @@
 import { useState } from "react";
 import { MainMenu } from "./app/MainMenu.js";
+import { DeckBuilder } from "./app/DeckBuilder.js";
 import { GameScreen } from "./game/GameScreen.js";
 import type { GameSetup } from "./engine-adapter/useGameEngine.js";
 
-export function App() {
-  const [setup, setSetup] = useState<GameSetup | null>(null);
+type Screen = { kind: "menu" } | { kind: "builder" } | { kind: "game"; setup: GameSetup };
 
-  if (!setup) {
-    return <MainMenu onStart={setSetup} />;
+export function App() {
+  const [screen, setScreen] = useState<Screen>({ kind: "menu" });
+
+  if (screen.kind === "builder") {
+    return <DeckBuilder onDone={() => setScreen({ kind: "menu" })} />;
   }
-  // key forces a fresh engine state when a new game starts
-  return <GameScreen key={setup.seed} setup={setup} onExit={() => setSetup(null)} />;
+  if (screen.kind === "game") {
+    // key forces a fresh engine state when a new game starts
+    return (
+      <GameScreen key={screen.setup.seed} setup={screen.setup} onExit={() => setScreen({ kind: "menu" })} />
+    );
+  }
+  return (
+    <MainMenu
+      onStart={(setup) => setScreen({ kind: "game", setup })}
+      onOpenDeckBuilder={() => setScreen({ kind: "builder" })}
+    />
+  );
 }

@@ -63,8 +63,17 @@ function findInstanceAnywhere(state: GameState, instanceId: string) {
 
 function applyAction(state: GameState, action: Action, cardDb: CardDatabase): GameState {
   switch (action.type) {
-    case "playLocation":
-      return playLocation(state, action.player, action.instanceId);
+    case "playLocation": {
+      const card = state.players[action.player].hand.find((c) => c.instanceId === action.instanceId);
+      let next = playLocation(state, action.player, action.instanceId);
+      if (card && next !== state) {
+        const def = cardDb.getCard(card.cardId);
+        if (def.kind === "location" && def.enterEffect) {
+          next = applyEffect(next, action.player, def.enterEffect);
+        }
+      }
+      return next;
+    }
     case "tapLocation": {
       const location = state.players[action.player].locationsInPlay.find((c) => c.instanceId === action.instanceId);
       if (!location) return state;
@@ -78,7 +87,15 @@ function applyAction(state: GameState, action: Action, cardDb: CardDatabase): Ga
       const def = cardDb.getCard(card.cardId);
       const cost = def.kind === "character" ? def.cost.total : 0;
       const spent = { ...state, players: { ...state.players, [action.player]: { ...state.players[action.player], resourcePool: state.players[action.player].resourcePool - cost } } };
-      return playToBench(spent, action.player, action.instanceId);
+      let next = playToBench(spent, action.player, action.instanceId);
+      if (def.kind === "character" && next !== spent) {
+        for (const ability of def.abilities) {
+          if (ability.trigger === "onPlay") {
+            next = applyEffect(next, action.player, ability.effect);
+          }
+        }
+      }
+      return next;
     }
     case "playItem": {
       const card = state.players[action.player].hand.find((c) => c.instanceId === action.instanceId);

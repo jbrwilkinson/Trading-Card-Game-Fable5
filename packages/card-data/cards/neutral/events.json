@@ -1,0 +1,13 @@
+[
+  {
+    "id": "the-eagles-are-coming",
+    "name": "The Eagles Are Coming!",
+    "faction": "neutral",
+    "kind": "event",
+    "rulesText": "Fast — Deal 3 damage to the opponent's active character.",
+    "artId": "the-eagles-are-coming",
+    "cost": { "total": 3 },
+    "speed": "fast",
+    "effect": { "type": "damage", "amount": 3, "target": { "scope": "opponentActive" } }
+  }
+]

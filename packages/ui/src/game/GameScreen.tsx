@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { Action, PlayerId } from "@lotr-tcg/engine";
 import { chooseAction } from "@lotr-tcg/ai";
 import { useGameEngine, type GameSetup } from "../engine-adapter/useGameEngine.js";
+import { useSoundEffects } from "../audio/useSoundEffects.js";
 import { PlayerPanel } from "./board/PlayerPanel.js";
 import { Hand } from "./hand/Hand.js";
 import { PassScreen } from "./hotseat/PassScreen.js";
@@ -43,6 +44,7 @@ export function GameScreen({ setup, onExit }: GameScreenProps) {
     [actionsFor, viewer, isAiTurn]
   );
   const opponent: PlayerId = viewer === "player1" ? "player2" : "player1";
+  const { muted, toggleMute } = useSoundEffects(state, isVsAI ? "player1" : null);
 
   // "start" and "end" phases have no decisions — advance through them automatically.
   // The ref guard makes this idempotent per game moment, since React StrictMode
@@ -135,6 +137,9 @@ export function GameScreen({ setup, onExit }: GameScreenProps) {
             )}
           </span>
         )}
+        <button className="btn btn--quiet" onClick={toggleMute} title={muted ? "Unmute sounds" : "Mute sounds"}>
+          {muted ? "🔇" : "🔊"}
+        </button>
         <button className="btn btn--quiet" onClick={onExit}>
           Quit
         </button>

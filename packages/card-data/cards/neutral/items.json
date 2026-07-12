@@ -1,0 +1,14 @@
+[
+  {
+    "id": "the-one-ring",
+    "name": "The One Ring",
+    "faction": "neutral",
+    "kind": "item",
+    "rulesText": "Attached character gets +3 power.",
+    "artId": "the-one-ring",
+    "flavorText": "One Ring to rule them all.",
+    "cost": { "total": 3 },
+    "attachTarget": "character",
+    "statModifiers": { "power": 3 }
+  }
+]

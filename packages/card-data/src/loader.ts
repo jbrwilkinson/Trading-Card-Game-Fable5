@@ -11,6 +11,20 @@ import mordorCharacters from "../cards/mordor/characters.json";
 import mordorItems from "../cards/mordor/items.json";
 import mordorEvents from "../cards/mordor/events.json";
 import mordorStories from "../cards/mordor/stories.json";
+import rohanLocations from "../cards/rohan/locations.json";
+import rohanCharacters from "../cards/rohan/characters.json";
+import rohanItems from "../cards/rohan/items.json";
+import rohanEvents from "../cards/rohan/events.json";
+import rohanStories from "../cards/rohan/stories.json";
+import gondorLocations from "../cards/gondor/locations.json";
+import gondorCharacters from "../cards/gondor/characters.json";
+import gondorItems from "../cards/gondor/items.json";
+import gondorEvents from "../cards/gondor/events.json";
+import gondorStories from "../cards/gondor/stories.json";
+import neutralCharacters from "../cards/neutral/characters.json";
+import neutralItems from "../cards/neutral/items.json";
+import neutralEvents from "../cards/neutral/events.json";
+import neutralStories from "../cards/neutral/stories.json";
 
 const RAW_FILES: Record<string, unknown> = {
   "fellowship/locations.json": fellowshipLocations,
@@ -23,6 +37,20 @@ const RAW_FILES: Record<string, unknown> = {
   "mordor/items.json": mordorItems,
   "mordor/events.json": mordorEvents,
   "mordor/stories.json": mordorStories,
+  "rohan/locations.json": rohanLocations,
+  "rohan/characters.json": rohanCharacters,
+  "rohan/items.json": rohanItems,
+  "rohan/events.json": rohanEvents,
+  "rohan/stories.json": rohanStories,
+  "gondor/locations.json": gondorLocations,
+  "gondor/characters.json": gondorCharacters,
+  "gondor/items.json": gondorItems,
+  "gondor/events.json": gondorEvents,
+  "gondor/stories.json": gondorStories,
+  "neutral/characters.json": neutralCharacters,
+  "neutral/items.json": neutralItems,
+  "neutral/events.json": neutralEvents,
+  "neutral/stories.json": neutralStories,
 };
 
 /** Validates every card file against the Zod schema; throws with a file-scoped message on the first invalid card. */
