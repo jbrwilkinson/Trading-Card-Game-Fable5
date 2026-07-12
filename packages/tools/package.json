@@ -1,0 +1,12 @@
+{
+  "name": "@lotr-tcg/tools",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate-cards": "echo 'validate-cards CLI pending — built alongside card-data schema in milestone M2' && exit 0"
+  },
+  "dependencies": {
+    "@lotr-tcg/card-data": "*"
+  }
+}
