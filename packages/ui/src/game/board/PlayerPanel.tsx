@@ -46,15 +46,33 @@ export function PlayerPanel({
         ? () => onAction(clickAction)
         : undefined;
 
+    const abilityAction =
+      isViewer && !targetableIds
+        ? viewerActions.find(
+            (a): a is Extract<Action, { type: "useAbility" }> =>
+              a.type === "useAbility" && a.instanceId === instance.instanceId
+          )
+        : undefined;
+
     return (
-      <CardFace
-        key={instance.instanceId}
-        card={card}
-        instance={instance}
-        cardDb={cardDb}
-        highlighted={isTargetable || Boolean(clickAction)}
-        onClick={onClick}
-      />
+      <div key={instance.instanceId} className="board-card">
+        <CardFace
+          card={card}
+          instance={instance}
+          cardDb={cardDb}
+          highlighted={isTargetable || Boolean(clickAction)}
+          onClick={onClick}
+        />
+        {abilityAction && (
+          <button
+            className="btn btn--small btn--ability"
+            title={card.kind === "character" ? card.abilities[abilityAction.abilityIndex]?.effect.type : undefined}
+            onClick={() => onAction(abilityAction)}
+          >
+            ✦ Ability ({card.kind === "character" ? (card.abilities[abilityAction.abilityIndex]?.cost ?? 0) : 0})
+          </button>
+        )}
+      </div>
     );
   };
 

@@ -101,6 +101,57 @@ describe("onTurnStart trigger", () => {
   });
 });
 
+describe("activated abilities", () => {
+  it("pays the cost, applies the effect, and locks out reuse until next turn", () => {
+    let state = withActive(freshState(), "player1", "flame-wizard");
+    state = withActive(state, "player2", "aragorn-strider");
+    state = {
+      ...state,
+      players: { ...state.players, player1: { ...state.players.player1, resourcePool: 3 } },
+    };
+
+    const abilityActions = legalActions(state, "player1", cardDb).filter((a) => a.type === "useAbility");
+    expect(abilityActions).toHaveLength(1);
+
+    state = dispatch(state, abilityActions[0]!, cardDb);
+    expect(state.players.player2.active?.damageMarked).toBe(2);
+    expect(state.players.player1.resourcePool).toBe(1); // paid 2
+    expect(state.players.player1.active?.abilityUsedThisTurn).toBe(true);
+    // No second use this turn.
+    expect(legalActions(state, "player1", cardDb).some((a) => a.type === "useAbility")).toBe(false);
+  });
+
+  it("is not offered when the cost is unaffordable", () => {
+    let state = withActive(freshState(), "player1", "flame-wizard");
+    state = {
+      ...state,
+      players: { ...state.players, player1: { ...state.players.player1, resourcePool: 1 } },
+    };
+    expect(legalActions(state, "player1", cardDb).some((a) => a.type === "useAbility")).toBe(false);
+  });
+
+  it("refreshes at the character's next turn start", () => {
+    let state = withActive(freshState(), "player1", "flame-wizard");
+    state = withActive(state, "player2", "aragorn-strider");
+    state = {
+      ...state,
+      players: { ...state.players, player1: { ...state.players.player1, resourcePool: 2 } },
+    };
+    const ability = legalActions(state, "player1", cardDb).find((a) => a.type === "useAbility")!;
+    state = dispatch(state, ability, cardDb);
+    // Cycle to player1's next turn: main->combat->end->(p2)->resource...
+    state = dispatch(state, { type: "endPhase", player: "player1" }, cardDb);
+    state = dispatch(state, { type: "endPhase", player: "player1" }, cardDb);
+    state = dispatch(state, { type: "endPhase", player: "player1" }, cardDb);
+    state = dispatch(state, { type: "endPhase", player: "player2" }, cardDb);
+    state = dispatch(state, { type: "endPhase", player: "player2" }, cardDb);
+    state = dispatch(state, { type: "endPhase", player: "player2" }, cardDb);
+    state = dispatch(state, { type: "endPhase", player: "player2" }, cardDb);
+    expect(state.activePlayer).toBe("player1");
+    expect(state.players.player1.active?.abilityUsedThisTurn).toBe(false);
+  });
+});
+
 describe("retreat", () => {
   it("swaps active with a chosen bench character, once per turn", () => {
     let state = withActive(freshState(), "player1", "frodo-baggins");

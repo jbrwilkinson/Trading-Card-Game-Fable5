@@ -17,6 +17,8 @@ export interface CardInstance {
   attachedItems: CardInstance[];
   statusEffects: StatusEffect[];
   evolvedFromInstanceIds: string[];
+  /** Set when an activated ability was used this turn (optional so older saved states still load). */
+  abilityUsedThisTurn?: boolean;
 }
 
 export interface PlayerState {

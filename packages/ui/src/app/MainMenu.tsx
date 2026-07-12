@@ -3,13 +3,16 @@ import { STARTER_DECKS } from "@lotr-tcg/card-data";
 import type { Difficulty } from "@lotr-tcg/ai";
 import type { GameMode, GameSetup } from "../engine-adapter/useGameEngine.js";
 import { loadCustomDecks } from "./deck-storage.js";
+import { loadSavedGame, type SavedGame } from "./game-storage.js";
 
 interface MainMenuProps {
   onStart: (setup: GameSetup) => void;
+  onResume: (saved: SavedGame) => void;
   onOpenDeckBuilder: () => void;
 }
 
-export function MainMenu({ onStart, onOpenDeckBuilder }: MainMenuProps) {
+export function MainMenu({ onStart, onResume, onOpenDeckBuilder }: MainMenuProps) {
+  const savedGame = useMemo(() => loadSavedGame(), []);
   const decks = useMemo(() => [...STARTER_DECKS, ...loadCustomDecks()], []);
   const [p1DeckId, setP1DeckId] = useState(decks[0]!.id);
   const [p2DeckId, setP2DeckId] = useState(decks[3]?.id ?? decks[0]!.id);
@@ -33,6 +36,12 @@ export function MainMenu({ onStart, onOpenDeckBuilder }: MainMenuProps) {
     <div className="menu">
       <h1 className="menu__title">Tales of Middle-earth</h1>
       <p className="menu__subtitle">A trading card game of the Free Peoples and the Shadow</p>
+
+      {savedGame && (
+        <button className="btn btn--large menu__resume" onClick={() => onResume(savedGame)}>
+          Resume game — turn {savedGame.state.turn} ({savedGame.setup.mode === "vsAI" ? "vs computer" : "hotseat"})
+        </button>
+      )}
 
       <div className="menu__decks">
         {(["player1", "player2"] as const).map((slot) => {

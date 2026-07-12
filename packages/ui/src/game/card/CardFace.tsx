@@ -37,7 +37,7 @@ export function CardFace({ card, instance, cardDb, size = "board", highlighted, 
     .join(" ");
 
   return (
-    <div className={classes} onClick={onClick} title={`${card.name}\n${card.rulesText}`}>
+    <div className={classes} onClick={onClick} data-card-id={card.id}>
       <div className="card__header">
         <span className="card__name">{card.name}</span>
         {"cost" in card && <span className="card__cost">{card.cost.total}</span>}

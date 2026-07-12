@@ -146,12 +146,15 @@
     "name": "Arwen Undómiel",
     "faction": "fellowship",
     "kind": "character",
-    "rulesText": "",
+    "rulesText": "Activated (1): heal 2 damage from your active character.",
     "artId": "arwen",
+    "flavorText": "\"What grace is given me, let it pass to him.\"",
     "cost": { "total": 2 },
     "power": 2,
     "resilience": 3,
-    "abilities": [],
+    "abilities": [
+      { "trigger": "activated", "cost": 1, "effect": { "type": "heal", "amount": 2, "target": { "scope": "ownActive" } } }
+    ],
     "tags": ["elf"]
   },
   {
@@ -215,14 +218,19 @@
     "name": "Gandalf the White",
     "faction": "fellowship",
     "kind": "character",
-    "rulesText": "Evolves from Gandalf the Grey. When played: heal 2 damage from your active character.",
+    "rulesText": "Evolves from Gandalf the Grey. When played: heal 2 damage from your active character. Activated (2): deal 2 damage to the opponent's active character.",
     "artId": "gandalf-the-white",
     "flavorText": "\"I come back to you now, at the turn of the tide.\"",
     "cost": { "total": 3 },
     "power": 6,
     "resilience": 7,
     "abilities": [
-      { "trigger": "onPlay", "effect": { "type": "heal", "amount": 2, "target": { "scope": "ownActive" } } }
+      { "trigger": "onPlay", "effect": { "type": "heal", "amount": 2, "target": { "scope": "ownActive" } } },
+      {
+        "trigger": "activated",
+        "cost": 2,
+        "effect": { "type": "damage", "amount": 2, "target": { "scope": "opponentActive" } }
+      }
     ],
     "evolvesFrom": "gandalf-the-grey",
     "tags": ["wizard"]

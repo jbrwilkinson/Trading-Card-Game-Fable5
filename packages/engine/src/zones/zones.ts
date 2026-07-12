@@ -130,11 +130,12 @@ export function attachItem(state: GameState, playerId: PlayerId, itemInstanceId:
 
 export function untapAll(state: GameState, playerId: PlayerId): GameState {
   const player = state.players[playerId];
-  const untap = (c: CardInstance): CardInstance => (c.tapped ? { ...c, tapped: false } : c);
+  const refresh = (c: CardInstance): CardInstance =>
+    c.tapped || c.abilityUsedThisTurn ? { ...c, tapped: false, abilityUsedThisTurn: false } : c;
   return updatePlayer(state, playerId, {
-    locationsInPlay: player.locationsInPlay.map(untap),
-    active: player.active ? untap(player.active) : null,
-    bench: player.bench.map(untap),
+    locationsInPlay: player.locationsInPlay.map(refresh),
+    active: player.active ? refresh(player.active) : null,
+    bench: player.bench.map(refresh),
     resourcePool: 0,
     hasPlayedLocationThisTurn: false,
     hasRetreatedThisTurn: false,

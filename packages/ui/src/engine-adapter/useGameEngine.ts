@@ -29,8 +29,11 @@ export interface GameSetup {
  * dispatcher that ignores actions the engine rejects (belt-and-braces — the
  * UI only offers actions from legalActions, so rejections indicate a UI bug,
  * logged rather than crashing the game).
+ *
+ * `restoredState` (a previously serialized GameState) resumes a saved game
+ * instead of dealing a fresh one.
  */
-export function useGameEngine(setup: GameSetup) {
+export function useGameEngine(setup: GameSetup, restoredState?: GameState) {
   const cardDb = useMemo<CardDatabase>(() => createCardDatabase(), []);
 
   const reducer = useCallback(
@@ -48,7 +51,8 @@ export function useGameEngine(setup: GameSetup) {
   const [state, dispatch] = useReducer(
     reducer,
     setup,
-    (s: GameSetup): GameState => createInitialState(s.player1DeckCardIds, s.player2DeckCardIds, s.seed)
+    (s: GameSetup): GameState =>
+      restoredState ?? createInitialState(s.player1DeckCardIds, s.player2DeckCardIds, s.seed)
   );
 
   const actionsFor = useCallback(

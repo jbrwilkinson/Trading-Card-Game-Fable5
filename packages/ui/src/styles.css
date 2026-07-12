@@ -119,6 +119,11 @@ body {
 .menu__builder-link {
   margin-top: 2rem;
 }
+.menu__resume {
+  display: block;
+  margin: 1.5rem auto 0;
+  border-color: #7ab87a;
+}
 
 /* ---------- deck builder ---------- */
 .builder {
@@ -435,6 +440,51 @@ body {
   flex-direction: column;
   gap: 0.1rem;
   font-size: 0.7rem;
+}
+
+/* ---------- board card + ability button ---------- */
+.board-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  align-items: center;
+}
+.btn--ability {
+  border-color: #b08aff;
+  background: linear-gradient(#3d2a5e, #2a1c42);
+  font-size: 0.7rem;
+}
+
+/* ---------- card inspector ---------- */
+.inspector {
+  position: fixed;
+  right: 1rem;
+  top: 4.5rem;
+  z-index: 5;
+  width: 13rem;
+  background: rgba(18, 15, 26, 0.96);
+  border: 1px solid #55496a;
+  border-radius: 10px;
+  padding: 0.7rem;
+  pointer-events: none;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+}
+.inspector__card {
+  margin: 0 auto 0.6rem;
+}
+.inspector__text {
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+.inspector__kind {
+  display: block;
+  opacity: 0.6;
+  font-size: 0.75rem;
+  margin-bottom: 0.3rem;
+}
+.inspector__flavor {
+  opacity: 0.65;
+  font-style: italic;
 }
 
 /* ---------- hand ---------- */

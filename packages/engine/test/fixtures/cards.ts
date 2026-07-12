@@ -91,6 +91,21 @@ export const FIXTURE_CARDS: Card[] = [
     tags: ["hobbit", "ring-bearer"],
   },
   {
+    id: "flame-wizard",
+    name: "Flame Wizard",
+    faction: "fellowship",
+    kind: "character",
+    rulesText: "Activated (2): deal 2 damage to the opponent's active character.",
+    artId: "flame-wizard",
+    cost: { total: 3 },
+    power: 3,
+    resilience: 4,
+    abilities: [
+      { trigger: "activated", cost: 2, effect: { type: "damage", amount: 2, target: { scope: "opponentActive" } } },
+    ],
+    tags: ["wizard"],
+  },
+  {
     id: "elf-archer",
     name: "Elf Archer",
     faction: "fellowship",

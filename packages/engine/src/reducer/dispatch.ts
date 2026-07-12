@@ -239,6 +239,31 @@ function applyAction(state: GameState, action: Action, cardDb: CardDatabase): Ga
       }
       return next;
     }
+    case "useAbility": {
+      const player = state.players[action.player];
+      const instance = [player.active, ...player.bench].find((c) => c?.instanceId === action.instanceId);
+      if (!instance) return state;
+      const def = cardDb.getCard(instance.cardId);
+      if (def.kind !== "character") return state;
+      const ability = def.abilities[action.abilityIndex];
+      if (!ability || ability.trigger !== "activated") return state;
+      const markUsed = (c: typeof player.active) =>
+        c && c.instanceId === action.instanceId ? { ...c, abilityUsedThisTurn: true } : c;
+      let next: GameState = {
+        ...state,
+        players: {
+          ...state.players,
+          [action.player]: {
+            ...player,
+            resourcePool: player.resourcePool - (ability.cost ?? 0),
+            active: markUsed(player.active),
+            bench: player.bench.map((c) => markUsed(c) ?? c),
+          },
+        },
+      };
+      next = applyEffect(next, action.player, ability.effect);
+      return log(next, action.player, `${instance.cardId} uses its ability.`, "resolve");
+    }
     case "passPriority":
       return resolveStack(state, cardDb);
     case "endPhase":

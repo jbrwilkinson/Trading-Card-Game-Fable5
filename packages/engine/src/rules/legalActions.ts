@@ -72,6 +72,17 @@ export function legalActions(state: GameState, playerId: PlayerId, cardDb: CardD
           actions.push({ type: "retreat", player: playerId, benchInstanceId: c.instanceId });
         }
       }
+      // Activated abilities: pay the cost, once per character per turn.
+      for (const instance of [player.active, ...player.bench]) {
+        if (!instance || instance.abilityUsedThisTurn) continue;
+        const def = cardDb.getCard(instance.cardId);
+        if (def.kind !== "character") continue;
+        def.abilities.forEach((ability, abilityIndex) => {
+          if (ability.trigger === "activated" && (ability.cost ?? 0) <= player.resourcePool) {
+            actions.push({ type: "useAbility", player: playerId, instanceId: instance.instanceId, abilityIndex });
+          }
+        });
+      }
       for (const card of player.hand) {
         const def = cardDb.getCard(card.cardId);
         if (def.kind === "story" && def.cost.total <= player.resourcePool) {

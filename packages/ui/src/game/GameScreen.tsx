@@ -5,8 +5,11 @@ import { useGameEngine, type GameSetup } from "../engine-adapter/useGameEngine.j
 import { useSoundEffects } from "../audio/useSoundEffects.js";
 import { isMusicPlaying, startMusic, stopMusic } from "../audio/music.js";
 import { PlayerPanel } from "./board/PlayerPanel.js";
+import { CardInspector, useCardInspector } from "./card/CardInspector.js";
 import { Hand, type TargetingRequest } from "./hand/Hand.js";
 import { PassScreen } from "./hotseat/PassScreen.js";
+import { clearSavedGame, saveGame } from "../app/game-storage.js";
+import type { GameState } from "@lotr-tcg/engine";
 
 const AI_SEAT: PlayerId = "player2";
 const AI_MOVE_DELAY_MS = 450;
@@ -27,11 +30,12 @@ interface TargetingState {
 
 interface GameScreenProps {
   setup: GameSetup;
+  restoredState?: GameState;
   onExit: () => void;
 }
 
-export function GameScreen({ setup, onExit }: GameScreenProps) {
-  const { state, dispatch, cardDb, actionsFor } = useGameEngine(setup);
+export function GameScreen({ setup, restoredState, onExit }: GameScreenProps) {
+  const { state, dispatch, cardDb, actionsFor } = useGameEngine(setup, restoredState);
   const isVsAI = setup.mode === "vsAI";
   const [targeting, setTargeting] = useState<TargetingState | null>(null);
   const [awaitingHandoff, setAwaitingHandoff] = useState(!isVsAI); // hotseat only: hide P1's opening hand at the deal
@@ -69,6 +73,13 @@ export function GameScreen({ setup, onExit }: GameScreenProps) {
     if (!isMusicPlaying()) startMusic(faction as Parameters<typeof startMusic>[0]);
     return () => stopMusic();
   }, [musicOn, setup.player1DeckCardIds, cardDb]);
+
+  // Autosave: the whole game state is serializable, so every change persists.
+  // A finished game clears the save (it isn't resumable).
+  useEffect(() => {
+    if (state.winner) clearSavedGame();
+    else saveGame(setup, state);
+  }, [state, setup]);
 
   // "start" and "end" phases have no decisions — advance through them automatically.
   // The ref guard makes this idempotent per game moment, since React StrictMode
@@ -149,6 +160,7 @@ export function GameScreen({ setup, onExit }: GameScreenProps) {
 
   const endPhaseAction = viewerActions.find((a) => a.type === "endPhase");
   const resolveAction = viewerActions.find((a) => a.type === "passPriority");
+  const { inspectedCard, inspectorHandlers } = useCardInspector(cardDb);
 
   if (!isVsAI && awaitingHandoff && !state.winner) {
     return <PassScreen player={viewer} onReady={() => setAwaitingHandoff(false)} />;
@@ -163,7 +175,7 @@ export function GameScreen({ setup, onExit }: GameScreenProps) {
       : "Player 2";
 
   return (
-    <div className="game">
+    <div className="game" {...inspectorHandlers}>
       <header className="game__banner">
         <span className="game__turn">
           Turn {state.turn} · {turnLabel}
@@ -249,6 +261,8 @@ export function GameScreen({ setup, onExit }: GameScreenProps) {
         onAction={onAction}
         onBeginTargeting={onBeginTargeting}
       />
+
+      {inspectedCard && <CardInspector card={inspectedCard} cardDb={cardDb} />}
 
       <details className="game-log">
         <summary>Game log ({state.log.length})</summary>

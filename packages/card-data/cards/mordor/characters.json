@@ -169,12 +169,19 @@
     "name": "The Mouth of Sauron",
     "faction": "mordor",
     "kind": "character",
-    "rulesText": "When played: draw 1 card.",
+    "rulesText": "When played: draw 1 card. Activated (2): the opponent's corruption rises by 1.",
     "artId": "mouth-of-sauron",
     "cost": { "total": 2 },
     "power": 1,
     "resilience": 4,
-    "abilities": [{ "trigger": "onPlay", "effect": { "type": "drawCards", "count": 1, "player": "self" } }],
+    "abilities": [
+      { "trigger": "onPlay", "effect": { "type": "drawCards", "count": 1, "player": "self" } },
+      {
+        "trigger": "activated",
+        "cost": 2,
+        "effect": { "type": "corruptionTick", "amount": 1, "player": "opponent" }
+      }
+    ],
     "tags": ["human", "herald"]
   },
   {
