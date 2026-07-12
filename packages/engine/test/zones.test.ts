@@ -101,4 +101,20 @@ describe("zones", () => {
     expect(state.players.player1.resourcePool).toBe(0);
     expect(state.players.player1.hasPlayedLocationThisTurn).toBe(false);
   });
+
+  it("untapAll untaps the active character so it can attack again next turn", () => {
+    let state = withHand(freshState(), "player1", ["frodo-baggins"]);
+    const frodo = state.players.player1.hand.find((c) => c.cardId === "frodo-baggins")!;
+    state = playToBench(state, "player1", frodo.instanceId);
+    state = moveToActive(state, "player1", frodo.instanceId);
+    state = {
+      ...state,
+      players: {
+        ...state.players,
+        player1: { ...state.players.player1, active: { ...state.players.player1.active!, tapped: true } },
+      },
+    };
+    state = untapAll(state, "player1");
+    expect(state.players.player1.active?.tapped).toBe(false);
+  });
 });

@@ -1,9 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Action, PlayerId } from "@lotr-tcg/engine";
+import { chooseAction } from "@lotr-tcg/ai";
 import { useGameEngine, type GameSetup } from "../engine-adapter/useGameEngine.js";
 import { PlayerPanel } from "./board/PlayerPanel.js";
 import { Hand } from "./hand/Hand.js";
 import { PassScreen } from "./hotseat/PassScreen.js";
+
+const AI_SEAT: PlayerId = "player2";
+const AI_MOVE_DELAY_MS = 450;
 
 const PHASE_LABELS: Record<string, string> = {
   start: "Start",
@@ -25,12 +29,19 @@ interface GameScreenProps {
 
 export function GameScreen({ setup, onExit }: GameScreenProps) {
   const { state, dispatch, cardDb, actionsFor } = useGameEngine(setup);
+  const isVsAI = setup.mode === "vsAI";
   const [targeting, setTargeting] = useState<TargetingState | null>(null);
-  const [awaitingHandoff, setAwaitingHandoff] = useState(true); // true at deal so P2 can't see P1's opening hand
+  const [awaitingHandoff, setAwaitingHandoff] = useState(!isVsAI); // hotseat only: hide P1's opening hand at the deal
   const [seenPlayer, setSeenPlayer] = useState<PlayerId>(state.activePlayer);
 
-  const viewer = state.activePlayer;
-  const viewerActions = useMemo(() => actionsFor(viewer), [actionsFor, viewer]);
+  // In vsAI the human always views from the player1 seat and watches the AI's
+  // turn play out; in hotseat the viewpoint follows the active player.
+  const viewer: PlayerId = isVsAI ? "player1" : state.activePlayer;
+  const isAiTurn = isVsAI && state.activePlayer === AI_SEAT;
+  const viewerActions = useMemo(
+    () => (isAiTurn ? [] : actionsFor(viewer)),
+    [actionsFor, viewer, isAiTurn]
+  );
   const opponent: PlayerId = viewer === "player1" ? "player2" : "player1";
 
   // "start" and "end" phases have no decisions — advance through them automatically.
@@ -47,12 +58,28 @@ export function GameScreen({ setup, onExit }: GameScreenProps) {
 
   // Hotseat: when the turn passes to the other player, blank the screen until they tap Ready.
   useEffect(() => {
-    if (state.activePlayer !== seenPlayer) {
+    if (!isVsAI && state.activePlayer !== seenPlayer) {
       setSeenPlayer(state.activePlayer);
       setAwaitingHandoff(true);
       setTargeting(null);
     }
-  }, [state.activePlayer, seenPlayer]);
+  }, [state.activePlayer, seenPlayer, isVsAI]);
+
+  // vsAI: on the AI's turn, pick and dispatch one action per state change,
+  // with a short delay so the human can follow along. The state-identity ref
+  // guard keeps StrictMode's double-invoked effects from double-dispatching.
+  const lastAiActedOn = useRef<unknown>(null);
+  useEffect(() => {
+    if (!isAiTurn || state.winner || state.phase === "start" || state.phase === "end") return;
+    if (lastAiActedOn.current === state) return;
+    const timer = setTimeout(() => {
+      if (lastAiActedOn.current === state) return;
+      lastAiActedOn.current = state;
+      const action = chooseAction(state, AI_SEAT, cardDb, setup.difficulty);
+      if (action) dispatch(action);
+    }, AI_MOVE_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [state, isAiTurn, cardDb, dispatch, setup.difficulty]);
 
   const onAction = (action: Action) => {
     setTargeting(null);
@@ -68,17 +95,25 @@ export function GameScreen({ setup, onExit }: GameScreenProps) {
   const endPhaseAction = viewerActions.find((a) => a.type === "endPhase");
   const resolveAction = viewerActions.find((a) => a.type === "passPriority");
 
-  if (awaitingHandoff && !state.winner) {
+  if (!isVsAI && awaitingHandoff && !state.winner) {
     return <PassScreen player={viewer} onReady={() => setAwaitingHandoff(false)} />;
   }
+
+  const turnLabel = isVsAI
+    ? state.activePlayer === "player1"
+      ? "Your turn"
+      : "The Shadow moves…"
+    : state.activePlayer === "player1"
+      ? "Player 1"
+      : "Player 2";
 
   return (
     <div className="game">
       <header className="game__banner">
         <span className="game__turn">
-          Turn {state.turn} · {viewer === "player1" ? "Player 1" : "Player 2"}
+          Turn {state.turn} · {turnLabel}
         </span>
-        <span className="game__phase">{PHASE_LABELS[state.phase] ?? state.phase}</span>
+        <span className="game__phase">{isAiTurn ? "The computer is taking its turn" : (PHASE_LABELS[state.phase] ?? state.phase)}</span>
         {targeting ? (
           <span className="game__targeting">
             Choose a character for the item{" "}
@@ -164,7 +199,11 @@ export function GameScreen({ setup, onExit }: GameScreenProps) {
             <h2>
               {state.winner === "draw"
                 ? "A draw — both sides fall together."
-                : `${state.winner === "player1" ? "Player 1" : "Player 2"} wins!`}
+                : isVsAI
+                  ? state.winner === "player1"
+                    ? "Victory! The Free Peoples prevail."
+                    : "Defeat — the Shadow covers Middle-earth."
+                  : `${state.winner === "player1" ? "Player 1" : "Player 2"} wins!`}
             </h2>
             <button className="btn" onClick={onExit}>
               Back to menu

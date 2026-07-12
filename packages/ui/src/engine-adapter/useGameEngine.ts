@@ -10,7 +10,14 @@ import {
 } from "@lotr-tcg/engine";
 import { createCardDatabase } from "@lotr-tcg/card-data";
 
+import type { Difficulty } from "@lotr-tcg/ai";
+
+export type GameMode = "hotseat" | "vsAI";
+
 export interface GameSetup {
+  mode: GameMode;
+  /** Only meaningful in vsAI mode; the AI always sits in the player2 seat. */
+  difficulty: Difficulty;
   player1DeckCardIds: string[];
   player2DeckCardIds: string[];
   seed: string;

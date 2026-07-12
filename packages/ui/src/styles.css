@@ -91,6 +91,30 @@ body {
   font-size: 0.85rem;
   margin-top: 1.2rem;
 }
+.menu__modes {
+  display: flex;
+  gap: 2.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+.menu__mode {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  align-items: center;
+}
+.menu__mode .menu__note {
+  margin-top: 0;
+}
+.menu__difficulty select {
+  font-family: inherit;
+  padding: 0.25rem 0.5rem;
+  background: #262233;
+  color: inherit;
+  border: 1px solid #55496a;
+  border-radius: 4px;
+}
 
 /* ---------- pass screen ---------- */
 .pass-screen {
