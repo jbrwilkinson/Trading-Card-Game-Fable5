@@ -8,6 +8,7 @@
   "scripts": {
     "build": "npm run build --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
+    "test:coverage": "npm run test:coverage --workspaces --if-present",
     "lint": "eslint .",
     "validate-cards": "npm run validate-cards --workspace=@lotr-tcg/tools",
     "dev": "npm run dev --workspace=@lotr-tcg/ui"
@@ -16,6 +17,7 @@
     "@types/node": "^26.1.1",
     "@typescript-eslint/eslint-plugin": "^8.13.0",
     "@typescript-eslint/parser": "^8.13.0",
+    "@vitest/coverage-v8": "^2.1.9",
     "eslint": "^9.14.0",
     "prettier": "^3.3.3",
     "typescript": "^5.6.3",

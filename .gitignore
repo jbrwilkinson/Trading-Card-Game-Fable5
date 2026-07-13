@@ -5,3 +5,4 @@ dist/
 coverage/
 art/source/**
 !art/source/.gitkeep
+coverage/
