@@ -1,0 +1,3 @@
+I'd like to create an online 'Trading Card' game inspired by Pokémon and "Magic The Gathering" (MTG) in terms of gameplay mechanic but using characters from both "Lord of the Rings" and "The Hobbit". I'd like to be able to play against the computer or have two players on the same computer take turns. I don't know much about the Pokémon or MTG games so please research them.
+
+Build a plan for how you would create this game, including the graphics and sounds.
