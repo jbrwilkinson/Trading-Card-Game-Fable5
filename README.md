@@ -13,6 +13,8 @@ It's not complete, but definitely the start of something.
 
 Enjoy!
 
+![Screensot](./docs/images/Screenshot2026-07-13.png)
+
 ## To Run
 
 ```bash
